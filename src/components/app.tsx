@@ -1,8 +1,12 @@
-import MainPage from "../pages/main-page/main-page";
+import MainPage from '../pages/main-page/main-page';
 
-function App () {
+type AppScreenProps = {
+  offersCount: number;
+}
+
+function App ({offersCount}: AppScreenProps) {
   return (
-    <MainPage/>
+    <MainPage offersCount={offersCount}/>
   );
 }
 

@@ -1,10 +1,10 @@
-import CitiesCard from "../../components/cities-cards";
+import CitiesCard from '../../components/cities-cards';
 
 type MainScreenProp = {
+  offersCount: number;
+};
 
-}
-
-function MainPage () {
+function MainPage({ offersCount }: MainScreenProp) {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -12,16 +12,26 @@ function MainPage () {
           <div className="header__wrapper">
             <div className="header__left">
               <a className="header__logo-link header__logo-link--active">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
+                <img
+                  className="header__logo"
+                  src="img/logo.svg"
+                  alt="6 cities logo"
+                  width="81"
+                  height="41"
+                />
               </a>
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
+                  <a
+                    className="header__nav-link header__nav-link--profile"
+                    href="#"
+                  >
+                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                    <span className="header__user-name user__name">
+                      Oliver.conner@gmail.com
+                    </span>
                     <span className="header__favorite-count">3</span>
                   </a>
                 </li>
@@ -84,22 +94,31 @@ function MainPage () {
                 <span className="places__sorting-type" tabIndex={0}>
                   Popular
                   <svg className="places__sorting-arrow" width="7" height="4">
-                    <use xlink:href="#icon-arrow-select"></use>
+                    <use xlinkHref="#icon-arrow-select"></use>
                   </svg>
                 </span>
                 <ul className="places__options places__options--custom places__options--opened">
-                  <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                  <li className="places__option" tabIndex={0}>Price: low to high</li>
-                  <li className="places__option" tabIndex={0}>Price: high to low</li>
-                  <li className="places__option" tabIndex={0}>Top rated first</li>
+                  <li
+                    className="places__option places__option--active"
+                    tabIndex={0}
+                  >
+                    Popular
+                  </li>
+                  <li className="places__option" tabIndex={0}>
+                    Price: low to high
+                  </li>
+                  <li className="places__option" tabIndex={0}>
+                    Price: high to low
+                  </li>
+                  <li className="places__option" tabIndex={0}>
+                    Top rated first
+                  </li>
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <CitiesCard/>
-                <CitiesCard/>
-                <CitiesCard/>
-                <CitiesCard/>
-                <CitiesCard/>
+                {Array.from({ length: offersCount }).map((_, index) => (
+                  <CitiesCard key={index} />
+                ))}
               </div>
             </section>
             <div className="cities__right-section">
@@ -110,6 +129,6 @@ function MainPage () {
       </main>
     </div>
   );
-};
+}
 
 export default MainPage;
