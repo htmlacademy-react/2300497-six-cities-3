@@ -3,10 +3,12 @@ export const Setting = {
 };
 
 export enum AppRoute {
+  Main ='/',
   Login = '/login',
-  Result = '/result',
-  Root = '/',
+  Favorites = '/favorites',
+  Offer = '/offer/:id',
 }
+
 
 export enum AuthorizationStatus {
   Auth = 'AUTH',
