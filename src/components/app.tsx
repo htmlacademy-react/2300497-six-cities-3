@@ -31,10 +31,12 @@ function App({ offersCount }: AppScreenProps) {
         />
         <Route
           path={AppRoute.Login}
-          element={<Login />} />
+          element={<Login />}
+        />
         <Route
           path={AppRoute.Offer}
-          element={<Offer />} />
+          element={<Offer />}
+        />
         <Route
           path="*"
           element={<NotFoundScreen />}
