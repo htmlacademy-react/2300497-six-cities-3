@@ -1,10 +1,12 @@
 import CitiesCard from '../../components/cities-cards';
+import { OfferTypes } from '../../mocks/offer';
 
 type MainScreenProp = {
   offersCount: number;
+  offersType: OfferTypes;
 };
 
-function MainPage({ offersCount }: MainScreenProp) {
+function MainPage({ offersCount, offersType }: MainScreenProp) {
   return (
     <div className="page page--gray page--main">
       <header className="header">

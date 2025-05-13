@@ -6,12 +6,14 @@ import PrivateRoute from '../components/private-route';
 import NotFoundScreen from '../components/not-found';
 import Login from '../pages/login/login';
 import Offer from '../pages/offer/offer';
+import { OfferTypes } from '../mocks/offer';
 
 type AppScreenProps = {
   offersCount: number;
+  offersType: OfferTypes;
 }
 
-function App({ offersCount }: AppScreenProps) {
+function App({ offersCount, offersType }: AppScreenProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
