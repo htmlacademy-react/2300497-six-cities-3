@@ -2,11 +2,10 @@ import CitiesCard from '../../components/cities-cards';
 import { OfferTypes } from '../../mocks/offer';
 
 type MainScreenProp = {
-  offersCount: number;
-  offersType: OfferTypes;
+  offersType: OfferTypes[];
 };
 
-function MainPage({ offersCount, offersType }: MainScreenProp) {
+function MainPage({ offersType }: MainScreenProp) {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -118,8 +117,8 @@ function MainPage({ offersCount, offersType }: MainScreenProp) {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {Array.from({ length: offersCount }).map((_, index) => (
-                  <CitiesCard key={index} />
+                {offersType.map((offer) => (
+                  <CitiesCard key={offer.id} offer={offer} />
                 ))}
               </div>
             </section>

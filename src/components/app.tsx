@@ -7,42 +7,31 @@ import NotFoundScreen from '../components/not-found';
 import Login from '../pages/login/login';
 import Offer from '../pages/offer/offer';
 import { OfferTypes } from '../mocks/offer';
+import offersCards from '../mocks/offers';
 
 type AppScreenProps = {
-  offersCount: number;
-  offersType: OfferTypes;
-}
+  offersType: OfferTypes[];
+};
 
-function App({ offersCount, offersType }: AppScreenProps): JSX.Element {
+function App({ offersType }: AppScreenProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path={AppRoute.Main}
-          element={<MainPage offersCount={offersCount} />}
+          element={<MainPage offersType={offersCards} />}
         />
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute
-              authorizationStatus={AuthorizationStatus.NoAuth}
-            >
+            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
               <Favorites />
             </PrivateRoute>
           }
         />
-        <Route
-          path={AppRoute.Login}
-          element={<Login />}
-        />
-        <Route
-          path={AppRoute.Offer}
-          element={<Offer />}
-        />
-        <Route
-          path="*"
-          element={<NotFoundScreen />}
-        />
+        <Route path={AppRoute.Login} element={<Login />} />
+        <Route path={AppRoute.Offer} element={<Offer />} />
+        <Route path="*" element={<NotFoundScreen />} />
       </Routes>
     </BrowserRouter>
   );

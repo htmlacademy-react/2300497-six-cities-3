@@ -6,8 +6,9 @@ const offersCards: OfferTypes[] = [
     type: 'Apartment',
     description: 'This is offer 1',
     price: 120,
-    image: 'img/apartment-01.jpg'
-
+    image: 'img/apartment-01.jpg',
+    isPremium: true,
+    rating: 4.5
   },
   {
     id: 2,
@@ -15,7 +16,9 @@ const offersCards: OfferTypes[] = [
     type: 'Room',
     description: 'This is offer 2',
     price: 100,
-    image: 'img/room.jpg'
+    image: 'img/room.jpg',
+    isPremium: false,
+    rating: 3.5,
   },
   {
     id: 3,
@@ -23,8 +26,9 @@ const offersCards: OfferTypes[] = [
     type: 'Apartment',
     description: 'This is offer 3',
     price: 95,
-    image: 'img/apartment-02.jpg'
-
+    image: 'img/apartment-02.jpg',
+    isPremium: false,
+    rating: 4.0,
   },
   {
     id:4,
@@ -32,8 +36,9 @@ const offersCards: OfferTypes[] = [
     type: 'Apartment',
     description: 'This is offer 4',
     price: 190,
-    image: 'img/apartment-03.jpg'
-
+    image: 'img/apartment-03.jpg',
+    isPremium: true,
+    rating: 5.0,
   }
 ];
 
