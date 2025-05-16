@@ -1,5 +1,7 @@
 export type OfferTypes = {
   id: number;
+  city: string;
+  isFavorite: boolean;
   name: string;
   isPremium: boolean;
   type: string;

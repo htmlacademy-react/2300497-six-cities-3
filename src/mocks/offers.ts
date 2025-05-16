@@ -2,6 +2,8 @@ import { OfferTypes } from './offer';
 const offersCards: OfferTypes[] = [
   {
     id: 1,
+    city: 'Amsterdam',
+    isFavorite: true,
     name: 'Beautiful luxurious apartment at great location',
     type: 'Apartment',
     description: 'This is offer 1',
@@ -12,6 +14,8 @@ const offersCards: OfferTypes[] = [
   },
   {
     id: 2,
+    city: 'Amsterdam',
+    isFavorite: false,
     name: 'Wood and stone place',
     type: 'Room',
     description: 'This is offer 2',
@@ -22,6 +26,8 @@ const offersCards: OfferTypes[] = [
   },
   {
     id: 3,
+    city: 'Amsterdam',
+    isFavorite: true,
     name: 'Canal View Prinsengracht',
     type: 'Apartment',
     description: 'This is offer 3',
@@ -32,6 +38,8 @@ const offersCards: OfferTypes[] = [
   },
   {
     id:4,
+    city: 'Amsterdam',
+    isFavorite: false,
     name: 'Nice, cozy, warm big bed apartment',
     type: 'Apartment',
     description: 'This is offer 4',
