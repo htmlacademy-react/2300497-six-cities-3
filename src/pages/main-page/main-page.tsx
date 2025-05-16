@@ -1,5 +1,5 @@
-import CitiesCard from '../../components/cities-cards';
 import { OfferTypes } from '../../mocks/offer';
+import OffersList from '../../components/OffersList';
 
 type MainScreenProp = {
   offersType: OfferTypes[];
@@ -117,9 +117,7 @@ function MainPage({ offersType }: MainScreenProp) {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {offersType.map((offer) => (
-                  <CitiesCard key={offer.id} offer={offer} />
-                ))}
+                <OffersList offersType={offersType} />
               </div>
             </section>
             <div className="cities__right-section">
