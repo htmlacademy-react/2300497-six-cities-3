@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import offersCards from '../../mocks/offers';
 import NotFoundScreen from '../../components/not-found';
+import ReviewsForm from '../../components/comment-form';
 
 
 
@@ -167,9 +168,7 @@ function Offer() {
                     </li>
                   ))}
                 </ul>
-                <form className="reviews__form form" action="#" method="post">
-                  {/*ОТЗЫВЫ! */}
-                </form>
+                  {<ReviewsForm/>}
               </section>
             </div>
           </div>
