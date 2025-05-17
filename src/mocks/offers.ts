@@ -10,7 +10,27 @@ const offersCards: OfferTypes[] = [
     price: 120,
     image: 'img/apartment-01.jpg',
     isPremium: true,
-    rating: 4.5
+    rating: 4.5,
+    bedRooms: 3,
+    maxAdults: 3,
+    goods: ['Wi-Fi', 'Kitchen', 'Washing machine'],
+    host: {
+      name: 'Irina',
+      isPro: true,
+      avatarUrl: 'img/avatar-angelina.jpg'
+    },
+    reviews: [
+      {
+        id: 1,
+        user: {
+          name: 'Max',
+          avatarUrl: 'img/avatar-max.jpg'
+        },
+        rating: 4,
+        comment: 'Great place!',
+        date: '2023-05-01'
+      }
+    ],
   },
   {
     id: 2,
@@ -23,6 +43,26 @@ const offersCards: OfferTypes[] = [
     image: 'img/room.jpg',
     isPremium: false,
     rating: 3.5,
+    bedRooms: 3,
+    maxAdults: 3,
+    goods: ['Wi-Fi', 'Kitchen', 'Washing machine'],
+    host: {
+      name: 'Irina',
+      isPro: true,
+      avatarUrl: 'img/avatar-angelina.jpg'
+    },
+    reviews: [
+      {
+        id: 1,
+        user: {
+          name: 'Max',
+          avatarUrl: 'img/avatar-max.jpg'
+        },
+        rating: 4,
+        comment: 'Great place!',
+        date: '2023-05-01'
+      }
+    ],
   },
   {
     id: 3,
@@ -35,9 +75,29 @@ const offersCards: OfferTypes[] = [
     image: 'img/apartment-02.jpg',
     isPremium: false,
     rating: 4.0,
+    bedRooms: 3,
+    maxAdults: 3,
+    goods: ['Wi-Fi', 'Kitchen', 'Washing machine'],
+    host: {
+      name: 'Irina',
+      isPro: true,
+      avatarUrl: 'img/avatar-angelina.jpg'
+    },
+    reviews: [
+      {
+        id: 1,
+        user: {
+          name: 'Max',
+          avatarUrl: 'img/avatar-max.jpg'
+        },
+        rating: 4,
+        comment: 'Great place!',
+        date: '2023-05-01'
+      }
+    ],
   },
   {
-    id:4,
+    id: 4,
     city: 'Amsterdam',
     isFavorite: false,
     name: 'Nice, cozy, warm big bed apartment',
@@ -47,6 +107,26 @@ const offersCards: OfferTypes[] = [
     image: 'img/apartment-03.jpg',
     isPremium: true,
     rating: 5.0,
+    bedRooms: 3,
+    maxAdults: 3,
+    goods: ['Wi-Fi', 'Kitchen', 'Washing machine'],
+    host: {
+      name: 'Irina',
+      isPro: true,
+      avatarUrl: 'img/avatar-angelina.jpg'
+    },
+    reviews: [
+      {
+        id: 1,
+        user: {
+          name: 'Max',
+          avatarUrl: 'img/avatar-max.jpg'
+        },
+        rating: 4,
+        comment: 'Great place!',
+        date: '2023-05-01'
+      }
+    ],
   }
 ];
 

@@ -18,6 +18,7 @@ function App({ offersType }: AppScreenProps): JSX.Element {
     <BrowserRouter>
       <Routes>
         <Route
+          index
           path={AppRoute.Main}
           element={<MainPage offersType={offersCards} />}
         />
