@@ -26,7 +26,7 @@ function App({ offersType }: AppScreenProps): JSX.Element {
           path={AppRoute.Favorites}
           element={
             <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
-              <Favorites favoriteOffers={offersCards.filter(offer => offer.isFavorite)} />
+              <Favorites favoriteOffers={offersCards.filter((offer) => offer.isFavorite)} />
             </PrivateRoute>
           }
         />
