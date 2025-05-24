@@ -52,7 +52,11 @@ function Map({ city, offers }: MapProps) {
     }
   }, [city, offers]);
 
-  return <section className="cities__map map" ref={mapContainerRef}></section>;
+  return <section
+    className="cities__map map"
+    ref={mapContainerRef}
+    style={{ height: '500px', width: '100%' }}
+  />
 }
 
 export default Map;
