@@ -1,6 +1,17 @@
 export type OfferTypes = {
   id: number;
-  city: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  city: {
+    name: string;
+    location: {
+      latitude: number;
+      longitude: number;
+      zoom: number;
+    };
+  };
   isFavorite: boolean;
   name: string;
   isPremium: boolean;

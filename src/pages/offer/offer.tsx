@@ -5,10 +5,9 @@ import NotFoundScreen from '../../components/not-found';
 import ReviewsForm from '../../components/comment-form';
 
 
-
 function Offer() {
   const { id } = useParams();
-  
+
   const offer = offersCards.find((item) => item.id === Number(id));
 
   if (!offer) {
@@ -168,7 +167,7 @@ function Offer() {
                     </li>
                   ))}
                 </ul>
-                  {<ReviewsForm/>}
+                {<ReviewsForm/>}
               </section>
             </div>
           </div>

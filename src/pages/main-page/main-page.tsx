@@ -1,5 +1,6 @@
 import { OfferTypes } from '../../mocks/offer';
 import OffersList from '../../components/OffersList';
+import Map from '../../components/map';
 
 type MainScreenProp = {
   offersType: OfferTypes[];
@@ -121,7 +122,7 @@ function MainPage({ offersType }: MainScreenProp) {
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <Map city={offersType[0].city} offers={offersType} />
             </div>
           </div>
         </div>
