@@ -1,8 +1,20 @@
 import { OfferTypes } from './offer';
+
 const offersCards: OfferTypes[] = [
   {
     id: 1,
-    city: 'Amsterdam',
+    location: {
+      latitude: 52.3909553943508,
+      longitude: 4.85309666406198,
+    },
+    city: {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.3909553943508,
+        longitude: 4.85309666406198,
+        zoom: 12,
+      },
+    },
     isFavorite: true,
     name: 'Beautiful luxurious apartment at great location',
     type: 'Apartment',
@@ -17,24 +29,35 @@ const offersCards: OfferTypes[] = [
     host: {
       name: 'Irina',
       isPro: true,
-      avatarUrl: 'img/avatar-angelina.jpg'
+      avatarUrl: 'img/avatar-angelina.jpg',
     },
     reviews: [
       {
         id: 1,
         user: {
           name: 'Max',
-          avatarUrl: 'img/avatar-max.jpg'
+          avatarUrl: 'img/avatar-max.jpg',
         },
         rating: 4,
         comment: 'Great place!',
-        date: '2023-05-01'
-      }
+        date: '2023-05-01',
+      },
     ],
   },
   {
     id: 2,
-    city: 'Amsterdam',
+    location: {
+      latitude: 52.3609553943508,
+      longitude: 4.85309666406198,
+    },
+    city: {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.3609553943508,
+        longitude: 4.85309666406198,
+        zoom: 12,
+      },
+    },
     isFavorite: false,
     name: 'Wood and stone place',
     type: 'Room',
@@ -49,24 +72,35 @@ const offersCards: OfferTypes[] = [
     host: {
       name: 'Irina',
       isPro: true,
-      avatarUrl: 'img/avatar-angelina.jpg'
+      avatarUrl: 'img/avatar-angelina.jpg',
     },
     reviews: [
       {
         id: 1,
         user: {
           name: 'Max',
-          avatarUrl: 'img/avatar-max.jpg'
+          avatarUrl: 'img/avatar-max.jpg',
         },
         rating: 4,
         comment: 'Great place!',
-        date: '2023-05-01'
-      }
+        date: '2023-05-01',
+      },
     ],
   },
   {
     id: 3,
-    city: 'Amsterdam',
+    location: {
+      latitude: 52.3909553943508,
+      longitude: 4.929309666406198,
+    },
+    city: {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.3909553943508,
+        longitude: 4.929309666406198,
+        zoom: 12,
+      },
+    },
     isFavorite: true,
     name: 'Canal View Prinsengracht',
     type: 'Apartment',
@@ -81,24 +115,35 @@ const offersCards: OfferTypes[] = [
     host: {
       name: 'Irina',
       isPro: true,
-      avatarUrl: 'img/avatar-angelina.jpg'
+      avatarUrl: 'img/avatar-angelina.jpg',
     },
     reviews: [
       {
         id: 1,
         user: {
           name: 'Max',
-          avatarUrl: 'img/avatar-max.jpg'
+          avatarUrl: 'img/avatar-max.jpg',
         },
         rating: 4,
         comment: 'Great place!',
-        date: '2023-05-01'
-      }
+        date: '2023-05-01',
+      },
     ],
   },
   {
     id: 4,
-    city: 'Amsterdam',
+    location: {
+      latitude: 52.3809553943508,
+      longitude: 4.939309666406198,
+    },
+    city: {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.3809553943508,
+        longitude: 4.939309666406198,
+        zoom: 12,
+      },
+    },
     isFavorite: false,
     name: 'Nice, cozy, warm big bed apartment',
     type: 'Apartment',
@@ -113,21 +158,21 @@ const offersCards: OfferTypes[] = [
     host: {
       name: 'Irina',
       isPro: true,
-      avatarUrl: 'img/avatar-angelina.jpg'
+      avatarUrl: 'img/avatar-angelina.jpg',
     },
     reviews: [
       {
         id: 1,
         user: {
           name: 'Max',
-          avatarUrl: 'img/avatar-max.jpg'
+          avatarUrl: 'img/avatar-max.jpg',
         },
         rating: 4,
-        comment: 'Great place!',
-        date: '2023-05-01'
-      }
+        comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.',
+        date: '2023-05-01',
+      },
     ],
-  }
+  },
 ];
 
 export default offersCards;
