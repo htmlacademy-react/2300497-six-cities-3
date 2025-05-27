@@ -168,7 +168,7 @@ const offersCards: OfferTypes[] = [
           avatarUrl: 'img/avatar-max.jpg',
         },
         rating: 4,
-        comment: 'Great place!',
+        comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.',
         date: '2023-05-01',
       },
     ],
