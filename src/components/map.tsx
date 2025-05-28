@@ -47,16 +47,20 @@ function Map({ city, offers }: MapProps) {
       markersRef.current.clearLayers();
 
       offers.forEach((offer) => {
-        L.marker([offer.location.latitude, offer.location.longitude]).addTo(markersRef.current!);
+        L.marker([offer.location.latitude, offer.location.longitude]).addTo(
+          markersRef.current!
+        );
       });
     }
   }, [city, offers]);
 
-  return <section
-    className="cities__map map"
-    ref={mapContainerRef}
-    style={{ height: '500px', width: '100%' }}
-  />
+  return (
+    <section
+      className="cities__map map"
+      ref={mapContainerRef}
+      style={{ height: '500px', width: '100%' }}
+    />
+  );
 }
 
 export default Map;
