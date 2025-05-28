@@ -153,7 +153,7 @@ function Offer() {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
               {offersCards
-                .filter((item) => item.city === offer.city && item.id !== offer.id)
+                .filter((item) => item.city.name === offer.city.name && item.id !== offer.id)
                 .slice(0, 3)
                 .map((nearbyOffer) => (
                   <article key={nearbyOffer.id} className="near-places__card place-card">
