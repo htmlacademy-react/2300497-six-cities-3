@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import offersCards from '../../mocks/offers';
 import NotFoundScreen from '../../components/not-found';
 import ReviewsForm from '../../components/comment-form';
-
+import CommentList from '../../components/comments-list';
 
 function Offer() {
   const { id } = useParams();
@@ -141,32 +141,7 @@ function Offer() {
               </div>
               <section className="offer__reviews reviews">
                 <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{offer.reviews.length}</span></h2>
-                <ul className="reviews__list">
-                  {offer.reviews.map((review) => (
-                    <li key={review.id} className="reviews__item">
-                      <div className="reviews__user user">
-                        <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                          <img className="reviews__avatar user__avatar" src={review.user.avatarUrl} width="54" height="54" alt="Reviews avatar"/>
-                        </div>
-                        <span className="reviews__user-name">
-                          {review.user.name}
-                        </span>
-                      </div>
-                      <div className="reviews__info">
-                        <div className="reviews__rating rating">
-                          <div className="reviews__stars rating__stars">
-                            <span style={{width: `${(review.rating / 5) * 100}%`}}></span>
-                            <span className="visually-hidden">Rating</span>
-                          </div>
-                        </div>
-                        <p className="reviews__text">
-                          {review.comment}
-                        </p>
-                        <time className="reviews__time" dateTime={review.date}>{new Date(review.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</time>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                {<CommentList reviews={offer.reviews}/>}
                 {<ReviewsForm/>}
               </section>
             </div>
