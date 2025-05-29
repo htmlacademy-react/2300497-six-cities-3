@@ -211,7 +211,7 @@ function Offer({offersType}: OfferProp) {
               </section>
             </div>
           </div>
-          <section className="offer__map map">
+          <section className="offer__map map" style={{ height: '600px', width: '1144px',marginLeft: 'auto', marginRight: 'auto' }}>
             <Map
               city={offer.city}
               offers={offersCards

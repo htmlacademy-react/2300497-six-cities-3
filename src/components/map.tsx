@@ -58,7 +58,7 @@ function Map({ city, offers }: MapProps) {
     <section
       className="cities__map map"
       ref={mapContainerRef}
-      style={{ height: '500px', width: '100%' }}
+      style={{ height: '600px', width: '100%', }}
     />
   );
 }

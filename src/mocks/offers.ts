@@ -128,6 +128,26 @@ const offersCards: OfferTypes[] = [
         comment: 'Great place!',
         date: '2023-05-01',
       },
+      {
+        id: 2,
+        user: {
+          name: 'Din',
+          avatarUrl: 'img/avatar-max.jpg',
+        },
+        rating: 4,
+        comment: 'Мне заплатили',
+        date: '2023-05-01',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'Sara',
+          avatarUrl: 'img/avatar-max.jpg',
+        },
+        rating: 4,
+        comment: 'Cool!',
+        date: '2023-05-01',
+      },
     ],
   },
   {
