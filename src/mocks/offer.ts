@@ -32,7 +32,7 @@ export type OfferTypes = {
   reviews: ReviewTypes[];
 };
 
-type ReviewTypes = {
+export type ReviewTypes = {
   id: number;
   user: {
     name: string;
