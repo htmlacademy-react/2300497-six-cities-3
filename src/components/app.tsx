@@ -6,21 +6,17 @@ import PrivateRoute from '../components/private-route';
 import NotFoundScreen from '../components/not-found';
 import Login from '../pages/login/login';
 import Offer from '../pages/offer/offer';
-import { OfferTypes } from '../mocks/offer';
 import offersCards from '../mocks/offers';
 
-type AppScreenProps = {
-  offersType: OfferTypes[];
-};
 
-function App({ offersType }: AppScreenProps): JSX.Element {
+function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
         <Route
           index
           path={AppRoute.Main}
-          element={<MainPage offersType={offersCards} />}
+          element={<MainPage/>}
         />
         <Route
           path={AppRoute.Favorites}

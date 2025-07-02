@@ -1,7 +1,34 @@
-import {createReducer} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { OfferTypes } from '../mocks/offer';
 
-const initialState = {};
+export type SortType = 'Popular' | 'Price: low to high' | 'Price: high to low' | 'Top rated first';
 
-const reducer = createReducer(initialState, (builder) => {});
+type OffersState = {
+  city: string;
+  offers: OfferTypes[];
+};
 
-export {reducer};
+const initialState: OffersState = {
+  city: 'Amsterdam',
+  offers: [],
+};
+
+const offersSlice = createSlice({
+  name: 'offers',
+  initialState,
+  reducers: {
+    changeCity(state, action) {
+      state.city = action.payload;
+    },
+    loadOffers(state, action) {
+      state.offers = action.payload;
+    },
+    setSortType(state, action) {
+      state.sortType = action.payload;
+    },
+  },
+});
+
+export const { changeCity, loadOffers, setSortType } = offersSlice.actions;
+
+export default offersSlice.reducer;
