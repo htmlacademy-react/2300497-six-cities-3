@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import MainPage from '../pages/main-page/main-page';
-import Favorites from '../pages/favorites/favorites';
 import { AppRoute, AuthorizationStatus } from '../const/const';
 import PrivateRoute from '../components/private-route';
+import MainPage from '../pages/main-page/main-page';
+import Favorites from '../pages/favorites/favorites';
 import NotFoundScreen from '../components/not-found';
 import Login from '../pages/login/login';
 import Offer from '../pages/offer/offer';

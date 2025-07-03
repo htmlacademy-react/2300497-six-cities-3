@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeCity, loadOffers } from '../../store/reducer';
+import { State } from '../../types/state';
 import OffersList from '../../components/OffersList';
 import Map from '../../components/map';
 import CityList from '../../components/city-list';
-import { useSelector, useDispatch } from 'react-redux';
-import { State } from '../../types/state';
-import { changeCity, loadOffers } from '../../store/reducer';
-import offersCards from '../../mocks/offers';
 import SortOptions from '../../components/sort-options';
+import offersCards from '../../mocks/offers';
+
 
 function MainPage() {
   const dispatch = useDispatch();
