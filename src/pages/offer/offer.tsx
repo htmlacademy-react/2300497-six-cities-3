@@ -6,13 +6,8 @@ import ReviewsForm from '../../components/comment-form';
 import CommentList from '../../components/comments-list';
 import Map from '../../components/map';
 import OffersList from '../../components/OffersList';
-import { OfferTypes } from '../../mocks/offer';
 
-type OfferProp = {
-  offersType: OfferTypes[];
-};
-
-function Offer({offersType}: OfferProp) {
+function Offer() {
   const { id } = useParams();
 
   const offer = offersCards.find((item) => item.id === Number(id));
