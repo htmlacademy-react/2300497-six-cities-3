@@ -8,7 +8,6 @@ import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';
 import offersCards from '../../mocks/offers';
 
-
 function MainPage() {
   const dispatch = useDispatch();
   const city = useSelector((state: State) => state.city);

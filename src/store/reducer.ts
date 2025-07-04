@@ -6,11 +6,13 @@ export type SortType = 'Popular' | 'Price: low to high' | 'Price: high to low' |
 type OffersState = {
   city: string;
   offers: OfferTypes[];
+  sortType: SortType;
 };
 
 const initialState: OffersState = {
   city: 'Amsterdam',
   offers: [],
+  sortType: 'Popular',
 };
 
 const offersSlice = createSlice({
