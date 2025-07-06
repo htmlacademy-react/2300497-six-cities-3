@@ -7,12 +7,14 @@ import Map from '../../components/map';
 import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';
 import offersCards from '../../mocks/offers';
+import Spinner from '../../components/spinner';
 
 function MainPage() {
   const dispatch = useDispatch();
   const city = useSelector((state: State) => state.city);
   const offers = useSelector((state: State) => state.offers);
   const sortType = useSelector((state: State) => state.sortType);
+  const isLoading = useSelector((state: State) => state.isLoading);
 
   useEffect(() => {
     const filteredOffers = offersCards.filter(
@@ -20,6 +22,10 @@ function MainPage() {
     );
     dispatch(loadOffers(filteredOffers));
   }, [city, dispatch]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   const sortedOffers = [...offers];
 

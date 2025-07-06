@@ -1,7 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
+import getOffersListApi from '../api';
 
 export type SortType = 'Popular' | 'Price: low to high' | 'Price: high to low' | 'Top rated first';
+
+
 
 type OffersState = {
   city: string;
