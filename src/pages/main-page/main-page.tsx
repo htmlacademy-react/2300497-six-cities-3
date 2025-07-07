@@ -1,18 +1,13 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  changeCity,
-  loadOffers,
-  startLoading,
-  loadOffersFromServer,
-} from '../../store/reducer';
+import { loadOffersFromServer} from '../../store/reducer';
 import { State } from '../../types/state';
 import OffersList from '../../components/OffersList';
 import Map from '../../components/map';
 import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';
 import Spinner from '../../components/spinner';
-import api from '../../api';
+import { OfferTypes } from '../../mocks/offer';
 
 function MainPage() {
   const dispatch = useDispatch();
