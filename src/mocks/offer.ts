@@ -1,9 +1,8 @@
 export type OfferTypes = {
-  id: number;
-  location: {
-    latitude: number;
-    longitude: number;
-  };
+  id: string; // UUID, не число!
+  title: string;
+  type: string;
+  price: number;
   city: {
     name: string;
     location: {
@@ -12,33 +11,36 @@ export type OfferTypes = {
       zoom: number;
     };
   };
+  location: {
+    latitude: number;
+    longitude: number;
+    zoom: number;
+  };
   isFavorite: boolean;
-  name: string;
   isPremium: boolean;
-  type: string;
   rating: number;
-  description: string;
-  price: number;
-  image: string;
+  description?: string;
+  bedrooms: number;
   goods: string[];
-  bedRooms: number;
-  maxAdults: number;
   host: {
     name: string;
-    isPro: boolean;
     avatarUrl?: string;
+    isPro: boolean;
   };
-  images?: string[];
-  reviews: ReviewTypes[];
+  images: string[];
+  maxAdults: number;
+  reviews?: ReviewTypes[];
 };
 
+
 export type ReviewTypes = {
-  id: number;
+  id: string;
+  date: string;
   user: {
     name: string;
     avatarUrl: string;
+    isPro: boolean;
   };
-  rating: number;
   comment: string;
-  date: string;
+  rating: number;
 };

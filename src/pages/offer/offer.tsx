@@ -14,7 +14,6 @@ function Offer() {
 
   const offer = offers.find((item) => item.id === id);
 
-
   if (!offer) {
     return <NotFoundScreen />;
   }
@@ -116,7 +115,7 @@ function Offer() {
                 </div>
               )}
               <div className="offer__name-wrapper">
-                <h1 className="offer__name">{offer.name}</h1>
+                <h1 className="offer__name">{offer.title}</h1>
                 <button
                   className={`offer__bookmark-button button ${
                     offer.isFavorite ? 'offer__bookmark-button--active' : ''
@@ -135,7 +134,8 @@ function Offer() {
                 <div className="offer__stars rating__stars">
                   <span
                     style={{ width: `${(offer.rating / 5) * 100}%` }}
-                  ></span>
+                  >
+                  </span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
@@ -147,7 +147,7 @@ function Offer() {
                   {offer.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {offer.bedRooms} Bedroom{offer.bedRooms !== 1 ? 's' : ''}
+                  {offer.bedrooms} Bedroom{offer.bedrooms !== 1 ? 's' : ''}
                 </li>
                 <li className="offer__feature offer__feature--adults">
                   Max {offer.maxAdults} adult{offer.maxAdults !== 1 ? 's' : ''}
@@ -159,32 +159,36 @@ function Offer() {
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
-                <ul className="offer__inside-list">
-                  {offer.goods.map((good) => (
-                    <li key={good} className="offer__inside-item">
-                      {good}
-                    </li>
-                  ))}
-                </ul>
+                {offer.goods && offer.goods.length > 0 ? (
+                  <ul className="offer__inside-list">
+                    {offer.goods.map((good) => (
+                      <li key={good} className="offer__inside-item">
+                        {good}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="offer__text">Нет доступных удобств</p>
+                )}
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div
                     className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      offer.host.isPro ? 'offer__avatar-wrapper--pro' : ''
+                      offer.host?.isPro ? 'offer__avatar-wrapper--pro' : ''
                     }`}
                   >
                     <img
                       className="offer__avatar user__avatar"
-                      src={offer.host.avatarUrl}
+                      src={offer.host?.avatarUrl}
                       width="74"
                       height="74"
                       alt="Host avatar"
                     />
                   </div>
-                  <span className="offer__user-name">{offer.host.name}</span>
-                  {offer.host.isPro && (
+                  <span className="offer__user-name">{offer.host?.name}</span>
+                  {offer.host?.isPro && (
                     <span className="offer__user-status">Pro</span>
                   )}
                 </div>
@@ -200,7 +204,7 @@ function Offer() {
                 <h2 className="reviews__title">
                   Reviews &middot;{' '}
                   <span className="reviews__amount">
-                    {offer.reviews.length}
+                    {offer.reviews?.length}
                   </span>
                 </h2>
                 {<CommentList reviews={offer.reviews} />}
@@ -222,7 +226,7 @@ function Offer() {
               offers={offers
                 .filter(
                   (item) =>
-                    item.city.name === offer.city.name && item.id !== offer.id
+                    item.city.name === offer.city?.name && item.id !== offer.id
                 )
                 .slice(0, 3)}
             />
@@ -237,7 +241,7 @@ function Offer() {
               offersType={offers
                 .filter(
                   (item) =>
-                    item.city.name === offer.city.name && item.id !== offer.id
+                    item.city.name === offer.city?.name && item.id !== offer.id
                 )
                 .slice(0, 3)}
             />
