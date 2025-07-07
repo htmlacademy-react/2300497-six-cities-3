@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import reducer from './reducer';
-import getOffersListApi from '../api';
+import api from '../api';
 
 
 export const store = configureStore({
@@ -8,7 +8,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: {
-        extraArgument: getOffersListApi,
+        extraArgument: api,
       },
     }),
 });

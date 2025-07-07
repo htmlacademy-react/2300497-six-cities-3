@@ -1,13 +1,18 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { changeCity, loadOffers } from '../../store/reducer';
+import {
+  changeCity,
+  loadOffers,
+  startLoading,
+  loadOffersFromServer,
+} from '../../store/reducer';
 import { State } from '../../types/state';
 import OffersList from '../../components/OffersList';
 import Map from '../../components/map';
 import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';
-import offersCards from '../../mocks/offers';
 import Spinner from '../../components/spinner';
+import api from '../../api';
 
 function MainPage() {
   const dispatch = useDispatch();
@@ -17,11 +22,8 @@ function MainPage() {
   const isLoading = useSelector((state: State) => state.isLoading);
 
   useEffect(() => {
-    const filteredOffers = offersCards.filter(
-      (offer) => offer.city.name === city
-    );
-    dispatch(loadOffers(filteredOffers));
-  }, [city, dispatch]);
+    dispatch(loadOffersFromServer());
+  }, [dispatch]);
 
   if (isLoading) {
     return <Spinner />;

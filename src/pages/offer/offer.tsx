@@ -1,16 +1,19 @@
+import { useSelector } from 'react-redux';
+import { State } from '../../types/state';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import offersCards from '../../mocks/offers';
 import NotFoundScreen from '../../components/not-found';
-import ReviewsForm from '../../components/comment-form';
-import CommentList from '../../components/comments-list';
 import Map from '../../components/map';
 import OffersList from '../../components/OffersList';
+import ReviewsForm from '../../components/comment-form';
+import CommentList from '../../components/comments-list';
+import { Link } from 'react-router-dom';
 
 function Offer() {
   const { id } = useParams();
+  const offers = useSelector((state: State) => state.allOffers);
 
-  const offer = offersCards.find((item) => item.id === Number(id));
+  const offer = offers.find((item) => item.id === id);
+
 
   if (!offer) {
     return <NotFoundScreen />;
@@ -132,8 +135,7 @@ function Offer() {
                 <div className="offer__stars rating__stars">
                   <span
                     style={{ width: `${(offer.rating / 5) * 100}%` }}
-                  >
-                  </span>
+                  ></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
@@ -187,7 +189,7 @@ function Offer() {
                   )}
                 </div>
                 <div className="offer__description">
-                  {offer.description.split('\n').map((paragraph, i) => (
+                  {offer.description?.split('\n').map((paragraph, i) => (
                     <p key={i} className="offer__text">
                       {paragraph}
                     </p>
@@ -206,10 +208,18 @@ function Offer() {
               </section>
             </div>
           </div>
-          <section className="offer__map map" style={{ height: '600px', width: '1144px', marginLeft: 'auto', marginRight: 'auto' }}>
+          <section
+            className="offer__map map"
+            style={{
+              height: '600px',
+              width: '1144px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
             <Map
               city={offer.city}
-              offers={offersCards
+              offers={offers
                 .filter(
                   (item) =>
                     item.city.name === offer.city.name && item.id !== offer.id
@@ -224,7 +234,7 @@ function Offer() {
               Other places in the neighbourhood
             </h2>
             <OffersList
-              offersType={offersCards
+              offersType={offers
                 .filter(
                   (item) =>
                     item.city.name === offer.city.name && item.id !== offer.id
