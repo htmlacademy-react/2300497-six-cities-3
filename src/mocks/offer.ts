@@ -1,5 +1,5 @@
 export type OfferTypes = {
-  id: string; // UUID, не число!
+  id: string;
   title: string;
   type: string;
   price: number;
@@ -27,7 +27,7 @@ export type OfferTypes = {
     avatarUrl?: string;
     isPro: boolean;
   };
-  images: string[];
+  images: string;
   maxAdults: number;
   reviews?: ReviewTypes[];
 };

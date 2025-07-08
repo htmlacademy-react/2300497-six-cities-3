@@ -15,7 +15,7 @@ function CitiesCard({
   onMouseEnter,
   onMouseLeave,
 }: CitiesCardProps) {
-  console.log('Images:', offer.images);
+  //console.log('Images:', offer.images);
 
   return (
     <div
@@ -33,7 +33,7 @@ function CitiesCard({
           <div className="cities__image-wrapper place-card__image-wrapper">
             <img
               className="place-card__image"
-              src={offer.images || 'img/placeholder.jpg'}
+              src={offer.images}
               width="260"
               height="200"
               alt="Place image"

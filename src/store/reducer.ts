@@ -60,7 +60,7 @@ const offersSlice = createSlice({
       })
       .addCase(loadOffersFromServer.fulfilled, (state, action) => {
         state.allOffers = action.payload;
-        state.offers = action.payload.filter(offer => offer.city.name === state.city);
+        state.offers = action.payload.filter((offer) => offer.city.name === state.city);
         state.isLoading = false;
       })
       .addCase(loadOffersFromServer.rejected, (state, action) => {
