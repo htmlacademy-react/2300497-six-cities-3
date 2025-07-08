@@ -33,7 +33,7 @@ function CitiesCard({
           <div className="cities__image-wrapper place-card__image-wrapper">
             <img
               className="place-card__image"
-              src={offer.images}
+              src={offer.previewImage}
               width="260"
               height="200"
               alt="Place image"

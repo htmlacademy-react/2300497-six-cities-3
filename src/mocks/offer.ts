@@ -19,6 +19,7 @@ export type OfferTypes = {
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
+  previewImage: string;
   description?: string;
   bedrooms: number;
   goods: string[];
@@ -27,7 +28,7 @@ export type OfferTypes = {
     avatarUrl?: string;
     isPro: boolean;
   };
-  images: string;
+  images: string[];
   maxAdults: number;
   reviews?: ReviewTypes[];
 };

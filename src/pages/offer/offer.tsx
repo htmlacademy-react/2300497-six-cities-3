@@ -27,7 +27,7 @@ function Offer() {
               <Link to="/" className="header__logo-link">
                 <img
                   className="header__logo"
-                  src="img/logo.svg"
+                  src={offer.images}
                   alt="6 cities logo"
                   width="81"
                   height="41"
