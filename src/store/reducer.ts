@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
 import { api } from '../api';
 import { AuthorizationStatus } from '../const/const';
+import { saveToken } from '../services/token';
 
 export type SortType =
   | 'Popular'
@@ -9,19 +10,22 @@ export type SortType =
   | 'Price: high to low'
   | 'Top rated first';
 
-type OffersState = {
+  type User = {
+  name: string;
+  avatarUrl: string;
+  email: string;
+  token: string;
+};
+
+export type OffersState = {
   city: string;
   offers: OfferTypes[];
   allOffers: OfferTypes[];
   sortType: SortType;
   isLoading: boolean;
-  error: string;
-  user: {
-    name: string;
-    avatarUrl: string;
-    email: string;
-    token: string;
-  } | null;
+  error: string | null;
+  authorizationStatus: AuthorizationStatus;
+  user: User | null;
 };
 
 const initialState: OffersState = {
@@ -30,7 +34,8 @@ const initialState: OffersState = {
   allOffers: [],
   sortType: 'Popular',
   isLoading: false,
-  error: '',
+  error: null,
+  authorizationStatus: AuthorizationStatus.Unknown,
   user: null,
 };
 
@@ -51,10 +56,10 @@ export const checkAuth = createAsyncThunk(
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.get('/login');
-      dispatch(setAuthorizationStatus('AUTH'));
+      dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
       return response.data;
     } catch (error) {
-      dispatch(setAuthorizationStatus('NO_AUTH'));
+      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
       return rejectWithValue('Ошибка проверки авторизации');
     }
   }
@@ -67,20 +72,21 @@ export const login = createAsyncThunk(
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const response = await api.post('/login', {
-        email,
-        password,
-      });
+      const response = await api.post('/login', { email, password });
 
-      const { token, user } = response.data;
+      const token = response.headers['x-token'] || response.data.token;
+      const user = response.data.user;
 
-      localStorage.setItem('token', token);
-      dispatch(setAuthorizationStatus('AUTH'));
-      dispatch(setUser(user));
+      if (token) {
+        saveToken(token);
+        api.defaults.headers.common['X-Token'] = token;
+        dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+        dispatch(setUser(user));
+      }
 
       return response.data;
     } catch (error) {
-      dispatch(setAuthorizationStatus('NO_AUTH'));
+      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
       return rejectWithValue('Неверный логин или пароль');
     }
   }
@@ -89,16 +95,7 @@ export const login = createAsyncThunk(
 
 const offersSlice = createSlice({
   name: 'offers',
-  initialState: {
-    city: 'Amsterdam',
-    offers: [],
-    allOffers: [],
-    sortType: 'Popular',
-    isLoading: false,
-    error: null,
-    authorizationStatus: 'UNKNOWN' as AuthorizationStatus,
-    user: null,
-  },
+  initialState,
   reducers: {
     changeCity(state, action) {
       state.city = action.payload;
@@ -106,16 +103,15 @@ const offersSlice = createSlice({
         (offer) => offer.city.name === action.payload
       );
     },
-    setUser(state, action) {
-      state.user = action.payload;
-    },
     setSortType(state, action) {
       state.sortType = action.payload;
+    },
+    setUser(state, action) {
+      state.user = action.payload;
     },
     setAuthorizationStatus(state, action) {
       state.authorizationStatus = action.payload;
     },
-
   },
   extraReducers: (builder) => {
     builder
@@ -133,21 +129,13 @@ const offersSlice = createSlice({
       .addCase(loadOffersFromServer.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
-      })
-      .addCase(checkAuth.fulfilled, (state, action) => {
-        state.authorizationStatus = AuthorizationStatus.Auth;
-        state.user = action.payload.user;
-      })
-      .addCase(checkAuth.rejected, (state) => {
-        state.authorizationStatus = AuthorizationStatus.NoAuth;
-        state.user = null;
       });
   },
 });
 
 
 
-export const { changeCity, setSortType } =
+export const { changeCity, setSortType, setAuthorizationStatus, setUser } =
   offersSlice.actions;
 
 export default offersSlice.reducer;
