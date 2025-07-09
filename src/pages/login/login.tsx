@@ -1,4 +1,24 @@
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { login } from '../../store/reducer';
+import { State } from '../../types/state';
+
 function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const status = useSelector((state: State) => state.authorizationStatus);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(login({ email, password }));
+  };
+
+  if (status === 'AUTH') {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div className="page page--gray page--login">
       <header className="header">
@@ -6,7 +26,7 @@ function Login() {
           <div className="header__wrapper">
             <div className="header__left">
               <a className="header__logo-link" href="main.html">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
+                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
               </a>
             </div>
           </div>
@@ -20,11 +40,11 @@ function Login() {
             <form className="login__form form" action="#" method="post">
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input" type="email" name="email" placeholder="Email" required/>
+                <input className="login__input form__input" type="email" name="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input className="login__input form__input" type="password" name="password" placeholder="Password" required/>
+                <input className="login__input form__input" type="password" name="password" placeholder="Password" minLength={1} required value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>
             </form>

@@ -30,7 +30,8 @@ const initialState: OffersState = {
   allOffers: [],
   sortType: 'Popular',
   isLoading: false,
-  error: null,
+  error: '',
+  user: null,
 };
 
 export const loadOffersFromServer = createAsyncThunk<OfferTypes[]>(
@@ -58,7 +59,7 @@ export const checkAuth = createAsyncThunk(
     }
   }
 );
- 
+
 export const login = createAsyncThunk(
   'user/login',
   async (
@@ -70,16 +71,21 @@ export const login = createAsyncThunk(
         email,
         password,
       });
- 
-      // Сохраняем токен в localStorage или передаем его дальше
-      localStorage.setItem('token', response.data.token);
+
+      const { token, user } = response.data;
+
+      localStorage.setItem('token', token);
       dispatch(setAuthorizationStatus('AUTH'));
+      dispatch(setUser(user));
+
       return response.data;
     } catch (error) {
+      dispatch(setAuthorizationStatus('NO_AUTH'));
       return rejectWithValue('Неверный логин или пароль');
     }
   }
 );
+
 
 const offersSlice = createSlice({
   name: 'offers',
@@ -100,12 +106,16 @@ const offersSlice = createSlice({
         (offer) => offer.city.name === action.payload
       );
     },
+    setUser(state, action) {
+      state.user = action.payload;
+    },
     setSortType(state, action) {
       state.sortType = action.payload;
     },
     setAuthorizationStatus(state, action) {
       state.authorizationStatus = action.payload;
     },
+
   },
   extraReducers: (builder) => {
     builder
@@ -123,9 +133,18 @@ const offersSlice = createSlice({
       .addCase(loadOffersFromServer.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.authorizationStatus = AuthorizationStatus.Auth;
+        state.user = action.payload.user;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.authorizationStatus = AuthorizationStatus.NoAuth;
+        state.user = null;
       });
   },
 });
+
 
 
 export const { changeCity, setSortType } =
