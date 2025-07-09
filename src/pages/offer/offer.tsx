@@ -1,16 +1,18 @@
+import { useSelector } from 'react-redux';
+import { State } from '../../types/state';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import offersCards from '../../mocks/offers';
 import NotFoundScreen from '../../components/not-found';
-import ReviewsForm from '../../components/comment-form';
-import CommentList from '../../components/comments-list';
 import Map from '../../components/map';
 import OffersList from '../../components/OffersList';
+import ReviewsForm from '../../components/comment-form';
+import CommentList from '../../components/comments-list';
+import { Link } from 'react-router-dom';
 
 function Offer() {
   const { id } = useParams();
+  const offers = useSelector((state: State) => state.allOffers);
 
-  const offer = offersCards.find((item) => item.id === Number(id));
+  const offer = offers.find((item) => item.id === id);
 
   if (!offer) {
     return <NotFoundScreen />;
@@ -61,48 +63,7 @@ function Offer() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/room.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/apartment-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/apartment-02.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/apartment-03.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/studio-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/apartment-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
+              {offer.images}
             </div>
           </div>
           <div className="offer__container container">
@@ -113,7 +74,7 @@ function Offer() {
                 </div>
               )}
               <div className="offer__name-wrapper">
-                <h1 className="offer__name">{offer.name}</h1>
+                <h1 className="offer__name">{offer.title}</h1>
                 <button
                   className={`offer__bookmark-button button ${
                     offer.isFavorite ? 'offer__bookmark-button--active' : ''
@@ -145,7 +106,7 @@ function Offer() {
                   {offer.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {offer.bedRooms} Bedroom{offer.bedRooms !== 1 ? 's' : ''}
+                  {offer.bedrooms} Bedroom{offer.bedrooms !== 1 ? 's' : ''}
                 </li>
                 <li className="offer__feature offer__feature--adults">
                   Max {offer.maxAdults} adult{offer.maxAdults !== 1 ? 's' : ''}
@@ -157,37 +118,41 @@ function Offer() {
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
-                <ul className="offer__inside-list">
-                  {offer.goods.map((good) => (
-                    <li key={good} className="offer__inside-item">
-                      {good}
-                    </li>
-                  ))}
-                </ul>
+                {offer.goods && offer.goods.length > 0 ? (
+                  <ul className="offer__inside-list">
+                    {offer.goods.map((good) => (
+                      <li key={good} className="offer__inside-item">
+                        {good}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="offer__text">Нет доступных удобств</p>
+                )}
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div
                     className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      offer.host.isPro ? 'offer__avatar-wrapper--pro' : ''
+                      offer.host?.isPro ? 'offer__avatar-wrapper--pro' : ''
                     }`}
                   >
                     <img
                       className="offer__avatar user__avatar"
-                      src={offer.host.avatarUrl}
+                      src={offer.host?.avatarUrl}
                       width="74"
                       height="74"
                       alt="Host avatar"
                     />
                   </div>
-                  <span className="offer__user-name">{offer.host.name}</span>
-                  {offer.host.isPro && (
+                  <span className="offer__user-name">{offer.host?.name}</span>
+                  {offer.host?.isPro && (
                     <span className="offer__user-status">Pro</span>
                   )}
                 </div>
                 <div className="offer__description">
-                  {offer.description.split('\n').map((paragraph, i) => (
+                  {offer.description?.split('\n').map((paragraph, i) => (
                     <p key={i} className="offer__text">
                       {paragraph}
                     </p>
@@ -198,7 +163,7 @@ function Offer() {
                 <h2 className="reviews__title">
                   Reviews &middot;{' '}
                   <span className="reviews__amount">
-                    {offer.reviews.length}
+                    {offer.reviews?.length}
                   </span>
                 </h2>
                 {<CommentList reviews={offer.reviews} />}
@@ -206,13 +171,21 @@ function Offer() {
               </section>
             </div>
           </div>
-          <section className="offer__map map" style={{ height: '600px', width: '1144px', marginLeft: 'auto', marginRight: 'auto' }}>
+          <section
+            className="offer__map map"
+            style={{
+              height: '600px',
+              width: '1144px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
             <Map
               city={offer.city}
-              offers={offersCards
+              offers={offers
                 .filter(
                   (item) =>
-                    item.city.name === offer.city.name && item.id !== offer.id
+                    item.city.name === offer.city?.name && item.id !== offer.id
                 )
                 .slice(0, 3)}
             />
@@ -224,10 +197,10 @@ function Offer() {
               Other places in the neighbourhood
             </h2>
             <OffersList
-              offersType={offersCards
+              offersType={offers
                 .filter(
                   (item) =>
-                    item.city.name === offer.city.name && item.id !== offer.id
+                    item.city.name === offer.city?.name && item.id !== offer.id
                 )
                 .slice(0, 3)}
             />

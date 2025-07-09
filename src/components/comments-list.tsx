@@ -8,7 +8,7 @@ type CommentsListProp = {
 function CommentList({ reviews }: CommentsListProp) {
   return (
     <ul className="reviews__list">
-      {reviews.map((review) => (
+      {reviews?.map((review) => (
         <Comment key={review.id} review={review} />
       ))}
     </ul>
