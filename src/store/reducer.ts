@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
-import api from '../api';
+import { api } from '../api';
+import { AuthorizationStatus } from '../const/const';
 
 export type SortType =
   | 'Popular'
@@ -14,7 +15,13 @@ type OffersState = {
   allOffers: OfferTypes[];
   sortType: SortType;
   isLoading: boolean;
-  error: string | null;
+  error: string;
+  user: {
+    name: string;
+    avatarUrl: string;
+    email: string;
+    token: string;
+  } | null;
 };
 
 const initialState: OffersState = {
@@ -38,9 +45,54 @@ export const loadOffersFromServer = createAsyncThunk<OfferTypes[]>(
   }
 );
 
+export const checkAuth = createAsyncThunk(
+  'user/checkAuth',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.get('/login');
+      dispatch(setAuthorizationStatus('AUTH'));
+      return response.data;
+    } catch (error) {
+      dispatch(setAuthorizationStatus('NO_AUTH'));
+      return rejectWithValue('Ошибка проверки авторизации');
+    }
+  }
+);
+ 
+export const login = createAsyncThunk(
+  'user/login',
+  async (
+    { email, password }: { email: string; password: string },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const response = await api.post('/login', {
+        email,
+        password,
+      });
+ 
+      // Сохраняем токен в localStorage или передаем его дальше
+      localStorage.setItem('token', response.data.token);
+      dispatch(setAuthorizationStatus('AUTH'));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Неверный логин или пароль');
+    }
+  }
+);
+
 const offersSlice = createSlice({
   name: 'offers',
-  initialState,
+  initialState: {
+    city: 'Amsterdam',
+    offers: [],
+    allOffers: [],
+    sortType: 'Popular',
+    isLoading: false,
+    error: null,
+    authorizationStatus: 'UNKNOWN' as AuthorizationStatus,
+    user: null,
+  },
   reducers: {
     changeCity(state, action) {
       state.city = action.payload;
@@ -51,6 +103,9 @@ const offersSlice = createSlice({
     setSortType(state, action) {
       state.sortType = action.payload;
     },
+    setAuthorizationStatus(state, action) {
+      state.authorizationStatus = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -60,7 +115,9 @@ const offersSlice = createSlice({
       })
       .addCase(loadOffersFromServer.fulfilled, (state, action) => {
         state.allOffers = action.payload;
-        state.offers = action.payload.filter((offer) => offer.city.name === state.city);
+        state.offers = action.payload.filter(
+          (offer) => offer.city.name === state.city
+        );
         state.isLoading = false;
       })
       .addCase(loadOffersFromServer.rejected, (state, action) => {
