@@ -15,7 +15,6 @@ function CitiesCard({
   onMouseEnter,
   onMouseLeave,
 }: CitiesCardProps) {
-  //console.log('Images:', offer.images);
 
   return (
     <div

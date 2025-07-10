@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../const/const';
 import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
 import PrivateRoute from '../components/private-route';
 import MainPage from '../pages/main-page/main-page';
 import Favorites from '../pages/favorites/favorites';
@@ -9,15 +8,8 @@ import NotFoundScreen from '../components/not-found';
 import Login from '../pages/login/login';
 import Offer from '../pages/offer/offer';
 import offersCards from '../mocks/offers';
-import { useDispatch } from 'react-redux';
-import { checkAuth } from '../store/reducer';
 
 function App(): JSX.Element {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
 
   const status = useSelector((state: State) => state.authorizationStatus);
 

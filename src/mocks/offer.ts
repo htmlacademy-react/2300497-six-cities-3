@@ -30,7 +30,7 @@ export type OfferTypes = {
   };
   images: [string];
   maxAdults: number;
-  reviews?: ReviewTypes[];
+  reviews: ReviewTypes[];
 };
 
 

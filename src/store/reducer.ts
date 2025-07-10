@@ -3,6 +3,7 @@ import { OfferTypes } from '../mocks/offer';
 import { api } from '../api';
 import { AuthorizationStatus } from '../const/const';
 import { saveToken } from '../services/token';
+import { clearToken } from '../services/token';
 
 export type SortType =
   | 'Popular'
@@ -10,7 +11,7 @@ export type SortType =
   | 'Price: high to low'
   | 'Top rated first';
 
-  type User = {
+type User = {
   name: string;
   avatarUrl: string;
   email: string;
@@ -24,6 +25,7 @@ export type OffersState = {
   sortType: SortType;
   isLoading: boolean;
   error: string | null;
+  isCheckingAuth: boolean;
   authorizationStatus: AuthorizationStatus;
   user: User | null;
 };
@@ -35,6 +37,7 @@ const initialState: OffersState = {
   sortType: 'Popular',
   isLoading: false,
   error: null,
+  isCheckingAuth: true,
   authorizationStatus: AuthorizationStatus.Unknown,
   user: null,
 };
@@ -59,11 +62,13 @@ export const checkAuth = createAsyncThunk<
   try {
     const response = await api.get('/login');
     dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
-    dispatch(setUser(response.data)); // если сервер возвращает данные о пользователе
+    dispatch(setUser(response.data));
     return response.data;
   } catch (error) {
     dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
     throw error;
+  } finally {
+    dispatch(setIsCheckingAuth(false));
   }
 });
 
@@ -94,11 +99,28 @@ export const login = createAsyncThunk(
   }
 );
 
+export const logout = createAsyncThunk(
+  'user/logout',
+  async (_, { dispatch }) => {
+    try {
+      await api.delete('/logout');
+    } catch (error) {
+      console.error('Ошибка при выходе', error);
+    } finally {
+      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+      dispatch(setUser(null));
+      clearToken();
+    }
+  }
+);
 
 const offersSlice = createSlice({
   name: 'offers',
   initialState,
   reducers: {
+    setIsCheckingAuth(state, action) {
+      state.isCheckingAuth = action.payload;
+    },
     changeCity(state, action) {
       state.city = action.payload;
       state.offers = state.allOffers.filter(
@@ -135,9 +157,12 @@ const offersSlice = createSlice({
   },
 });
 
-
-
-export const { changeCity, setSortType, setAuthorizationStatus, setUser } =
-  offersSlice.actions;
+export const {
+  changeCity,
+  setSortType,
+  setAuthorizationStatus,
+  setIsCheckingAuth,
+  setUser,
+} = offersSlice.actions;
 
 export default offersSlice.reducer;
