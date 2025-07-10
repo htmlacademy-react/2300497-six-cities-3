@@ -51,19 +51,21 @@ export const loadOffersFromServer = createAsyncThunk<OfferTypes[]>(
   }
 );
 
-export const checkAuth = createAsyncThunk(
-  'user/checkAuth',
-  async (_, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await api.get('/login');
-      dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
-      return response.data;
-    } catch (error) {
-      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-      return rejectWithValue('Ошибка проверки авторизации');
-    }
+export const checkAuth = createAsyncThunk<
+  UserData,
+  void,
+  { dispatch; extra: AxiosInstance }
+>('user/checkAuth', async (_, { extra: api, dispatch }) => {
+  try {
+    const response = await api.get('/login');
+    dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+    dispatch(setUser(response.data)); // если сервер возвращает данные о пользователе
+    return response.data;
+  } catch (error) {
+    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+    throw error;
   }
-);
+});
 
 export const login = createAsyncThunk(
   'user/login',
