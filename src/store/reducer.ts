@@ -4,6 +4,7 @@ import { api } from '../api';
 import { AuthorizationStatus } from '../const/const';
 import { saveToken } from '../services/token';
 import { clearToken } from '../services/token';
+import { AxiosInstance } from 'axios';
 
 export type SortType =
   | 'Popular'
