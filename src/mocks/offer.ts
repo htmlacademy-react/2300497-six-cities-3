@@ -28,9 +28,9 @@ export type OfferTypes = {
     avatarUrl?: string;
     isPro: boolean;
   };
-  images: string;
+  images: [string];
   maxAdults: number;
-  reviews?: ReviewTypes[];
+  reviews: ReviewTypes[];
 };
 
 
