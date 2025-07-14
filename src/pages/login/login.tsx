@@ -1,21 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate} from 'react-router-dom';
 import { login } from '../../store/reducer';
 import { State } from '../../types/state';
 import { Link } from 'react-router-dom';
+import { changeCity } from '../../store/reducer';
+import { randomCity } from '../../components/random-city-start';
+import { cities } from '../../components/city-list';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const status = useSelector((state: State) => state.authorizationStatus);
+  const [currentCity, setCurrentCity] = useState<string>('Paris');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const city = randomCity(cities);
+    setCurrentCity(city);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted', { email, password });
     dispatch(login({ email, password }));
   };
+
+   const handleCityClick = (city: string) => {
+      dispatch(changeCity(city));
+      navigate('/');
+    };
 
   if (status === 'AUTH') {
     return <Navigate to="/" />;
@@ -59,8 +74,11 @@ function Login() {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
-                <span>Amsterdam</span>
+              <a className="locations__item-link" href="#" onClick={(e) => {
+              e.preventDefault();
+              handleCityClick(currentCity);
+            }}>
+                <span>{currentCity}</span>
               </a>
             </div>
           </section>

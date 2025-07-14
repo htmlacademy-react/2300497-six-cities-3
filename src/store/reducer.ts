@@ -32,7 +32,7 @@ export type OffersState = {
 };
 
 const initialState: OffersState = {
-  city: 'Amsterdam',
+  city: 'Paris',
   offers: [],
   allOffers: [],
   sortType: 'Popular',

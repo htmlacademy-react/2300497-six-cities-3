@@ -1,8 +1,7 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { changeCity } from '../store/reducer';
 
-const cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+export const cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
 
 function CityList() {
   const dispatch = useDispatch();
