@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import '../../public/css/not-found.css'
+import '../../public/css/not-found.css';
 
 function NotFoundScreen(): JSX.Element {
   return (

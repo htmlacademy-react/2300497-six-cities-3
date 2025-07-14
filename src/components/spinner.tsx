@@ -1,8 +1,17 @@
+import '../../public/css/spinner.css';
+
 function Spinner() {
   return (
-    <div className="spinner">
-      <span>Loading...</span>
-    </div>
+    <section className="spinner">
+      <div className="grid">
+        <div className="cup">
+          <div className="cup__handler"></div>
+          <div className="cup__steam">
+            <div className="cup__steam-flow"></div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 

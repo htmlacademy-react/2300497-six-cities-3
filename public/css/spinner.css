@@ -1,0 +1,104 @@
+.spinner *,
+.spinner *::before,
+.spinner *::after {
+    box-sizing: border-box
+}
+
+.spinner,
+.grid {
+    margin: auto;
+    height: 500px;
+}
+
+.grid {
+    display: grid;
+    place-items: center;
+}
+
+.cup {
+    background-color: #93b0a1;
+    transform: translateY(16.6666666667vh);
+    position: relative;
+    display: grid;
+    border-radius: 5.5555555556vh 5.5555555556vh 16.6666666667vh 16.6666666667vh;
+    height: 25vh;
+    width: 33.3333333333vh;
+}
+
+.cup__handler {
+    background-color: #eff3f1;
+    transform: translate(62.5%, -18.75%);
+    position: absolute;
+    place-self: center end;
+    border-radius: 11.1111111111vh 5.5555555556vh 11.1111111111vh 6.9444444444vh;
+    border: 1.3888888889vh solid #93b0a1;
+    border-left-width: 2.7777777778vh;
+    height: 13.8888888889vh;
+    width: 13.8888888889vh;
+}
+
+.cup__steam {
+    background-color: white;
+    transform: translateY(-25vh);
+    position: absolute;
+    border-radius: 13.8888888889vh 6.9444444444vh;
+    height: 16.6666666667vh;
+    place-self: start center;
+    width: 11.1111111111vh;
+}
+
+.cup__steam-flow {
+    background-color: #eff3f1;
+    -webkit-animation: steam-flow 1s linear infinite;
+    animation: steam-flow 1s linear infinite;
+    height: 2.7777777778vh;
+    top: 0;
+}
+
+.cup__steam-flow,
+.cup__steam-flow::before,
+.cup__steam-flow::after {
+    position: absolute;
+    right: 0;
+    left: 0;
+}
+
+.cup__steam-flow::before,
+.cup__steam-flow::after {
+    content: "";
+    height: 2.7777777778vh;
+}
+
+.cup__steam-flow::before {
+    transform: translateY(100%);
+    border-radius: 1.3888888889vh 1.3888888889vh 0vh 0vh;
+    bottom: 0;
+    box-shadow: 0 -1.3888888889vh 0 0 #eff3f1;
+}
+
+.cup__steam-flow::after {
+    transform: translateY(-100%);
+    border-radius: 0vh 0vh 1.3888888889vh 1.3888888889vh;
+    top: 0;
+    box-shadow: 0 1.3888888889vh 0 0 #eff3f1;
+}
+
+@-webkit-keyframes steam-flow {
+    from {
+        transform: translateY(19.4444444444vh);
+    }
+
+    to {
+        transform: translateY(-2.7777777778vh);
+    }
+}
+
+@keyframes steam-flow {
+    from {
+        transform: translateY(19.4444444444vh);
+    }
+
+    to {
+        transform: translateY(-2.7777777778vh);
+    }
+}
