@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../const/const';
 import { useSelector } from 'react-redux';
+import { State } from '../types/state';
 import PrivateRoute from '../components/private-route';
 import MainPage from '../pages/main-page/main-page';
 import Favorites from '../pages/favorites/favorites';
