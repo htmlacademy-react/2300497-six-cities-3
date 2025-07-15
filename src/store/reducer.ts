@@ -5,6 +5,7 @@ import { AuthorizationStatus } from '../const/const';
 import { saveToken } from '../services/token';
 import { clearToken } from '../services/token';
 import { AxiosInstance } from 'axios';
+import { ReviewTypes } from '../mocks/offer';
 
 export type SortType =
   | 'Popular'
@@ -29,6 +30,8 @@ export type OffersState = {
   isCheckingAuth: boolean;
   authorizationStatus: AuthorizationStatus;
   user: User | null;
+  currentOffer: OfferTypes | null;
+  nearbyOffers: OfferTypes[];
 };
 
 const initialState: OffersState = {
@@ -41,6 +44,8 @@ const initialState: OffersState = {
   isCheckingAuth: true,
   authorizationStatus: AuthorizationStatus.Unknown,
   user: null,
+  currentOffer: null,
+  nearbyOffers: [],
 };
 
 export const loadOffersFromServer = createAsyncThunk<OfferTypes[]>(
@@ -115,6 +120,25 @@ export const logout = createAsyncThunk(
   }
 );
 
+export const loadOfferById = createAsyncThunk<
+  { offer: OfferTypes; nearby: OfferTypes[] },
+  string,
+  { extra: AxiosInstance }
+>('offers/loadOfferById', async (offerId, { extra: api }) => {
+  try {
+    const offerResponse = await api.get<OfferTypes>(`/offers/${offerId}`);
+    const nearbyResponse = await api.get<OfferTypes[]>(`/offers/${offerId}/nearby`);
+
+    return {
+      offer: offerResponse.data,
+      nearby: nearbyResponse.data,
+    };
+  } catch (error) {
+    console.error('Ошибка при загрузке предложения:', error);
+    throw new Error('Предложение не найдено');
+  }
+});
+
 const offersSlice = createSlice({
   name: 'offers',
   initialState,
@@ -140,22 +164,30 @@ const offersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(loadOfferById.fulfilled, (state, action) => {
+        state.currentOffer = action.payload.offer;
+        state.nearbyOffers = action.payload.nearby;
+      })
+      .addCase(loadOfferById.rejected, (state) => {
+        state.currentOffer = null; 
+      })
+
       .addCase(loadOffersFromServer.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(loadOffersFromServer.fulfilled, (state, action) => {
-        state.allOffers = action.payload;
-        state.offers = action.payload.filter(
-          (offer) => offer.city.name === state.city
-        );
-        state.isLoading = false;
-      })
-      .addCase(loadOffersFromServer.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      });
-  },
+    .addCase(loadOffersFromServer.fulfilled, (state, action) => {
+      state.allOffers = action.payload;
+      state.offers = action.payload.filter(
+        (offer) => offer.city.name === state.city
+      );
+      state.isLoading = false;
+    })
+    .addCase(loadOffersFromServer.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload as string;
+    });
+},
 });
 
 export const {

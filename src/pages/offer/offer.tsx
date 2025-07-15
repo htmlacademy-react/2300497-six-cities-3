@@ -1,5 +1,6 @@
-import { useSelector } from 'react-redux';
-import { State } from '../../types/state';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadOfferById } from '../../store/reducer';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
@@ -7,15 +8,22 @@ import OffersList from '../../components/OffersList';
 import ReviewsForm from '../../components/comment-form';
 import CommentList from '../../components/comments-list';
 import Header from '../../components/header';
+import { getOfferWithNearby } from '../../store/selectors';
+import Spinner from '../../components/spinner';
 
 function Offer() {
-  const { id } = useParams();
-  const offers = useSelector((state: State) => state.allOffers);
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useDispatch();
+  const { currentOffer, nearbyOffers } = useSelector(getOfferWithNearby);
 
-  const offer = offers.find((item) => item.id === id);
+  useEffect(() => {
+    if (id) {
+      dispatch(loadOfferById(id));
+    }
+  }, [dispatch, id]);
 
-  if (!offer) {
-    return <NotFoundScreen />;
+  if (!currentOffer) {
+    return <Spinner />;
   }
 
   return (
@@ -26,21 +34,21 @@ function Offer() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {offer.images}
+              {currentOffer.images}
             </div>
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              {offer.isPremium && (
+              {currentOffer.isPremium && (
                 <div className="offer__mark">
                   <span>Premium</span>
                 </div>
               )}
               <div className="offer__name-wrapper">
-                <h1 className="offer__name">{offer.title}</h1>
+                <h1 className="offer__name">{currentOffer.title}</h1>
                 <button
                   className={`offer__bookmark-button button ${
-                    offer.isFavorite ? 'offer__bookmark-button--active' : ''
+                    currentOffer.isFavorite ? 'offer__bookmark-button--active' : ''
                   }`}
                   type="button"
                 >
@@ -48,42 +56,42 @@ function Offer() {
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
                   <span className="visually-hidden">
-                    {offer.isFavorite ? 'In bookmarks' : 'To bookmarks'}
+                    {currentOffer.isFavorite ? 'In bookmarks' : 'To bookmarks'}
                   </span>
                 </button>
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
                   <span
-                    style={{ width: `${(offer.rating / 5) * 100}%` }}
+                    style={{ width: `${(currentOffer.rating / 5) * 100}%` }}
                   >
                   </span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
-                  {offer.rating}
+                  {currentOffer.rating}
                 </span>
               </div>
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">
-                  {offer.type}
+                  {currentOffer.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {offer.bedrooms} Bedroom{offer.bedrooms !== 1 ? 's' : ''}
+                  {currentOffer.bedrooms} Bedroom{currentOffer.bedrooms !== 1 ? 's' : ''}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {offer.maxAdults} adult{offer.maxAdults !== 1 ? 's' : ''}
+                  Max {currentOffer.maxAdults} adult{currentOffer.maxAdults !== 1 ? 's' : ''}
                 </li>
               </ul>
               <div className="offer__price">
-                <b className="offer__price-value">&euro;{offer.price}</b>
+                <b className="offer__price-value">&euro;{currentOffer.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
-                {offer.goods && offer.goods.length > 0 ? (
+                {currentOffer.goods && currentOffer.goods.length > 0 ? (
                   <ul className="offer__inside-list">
-                    {offer.goods.map((good) => (
+                    {currentOffer.goods.map((good) => (
                       <li key={good} className="offer__inside-item">
                         {good}
                       </li>
@@ -98,24 +106,24 @@ function Offer() {
                 <div className="offer__host-user user">
                   <div
                     className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      offer.host?.isPro ? 'offer__avatar-wrapper--pro' : ''
+                      currentOffer.host?.isPro ? 'offer__avatar-wrapper--pro' : ''
                     }`}
                   >
                     <img
                       className="offer__avatar user__avatar"
-                      src={offer.host?.avatarUrl}
+                      src={currentOffer.host?.avatarUrl}
                       width="74"
                       height="74"
                       alt="Host avatar"
                     />
                   </div>
-                  <span className="offer__user-name">{offer.host?.name}</span>
-                  {offer.host?.isPro && (
+                  <span className="offer__user-name">{currentOffer.host?.name}</span>
+                  {currentOffer.host?.isPro && (
                     <span className="offer__user-status">Pro</span>
                   )}
                 </div>
                 <div className="offer__description">
-                  {offer.description?.split('\n').map((paragraph, i) => (
+                  {currentOffer.description?.split('\n').map((paragraph, i) => (
                     <p key={i} className="offer__text">
                       {paragraph}
                     </p>
@@ -126,10 +134,10 @@ function Offer() {
                 <h2 className="reviews__title">
                   Reviews &middot;{' '}
                   <span className="reviews__amount">
-                    {offer.reviews?.length}
+                    {currentOffer.reviews?.length}
                   </span>
                 </h2>
-                {<CommentList reviews={offer.reviews} />}
+                {<CommentList reviews={currentOffer.reviews} />}
                 {<ReviewsForm />}
               </section>
             </div>
@@ -144,11 +152,11 @@ function Offer() {
             }}
           >
             <Map
-              city={offer.city}
-              offers={offers
+              city={currentOffer.city}
+              offers={nearbyOffers
                 .filter(
                   (item) =>
-                    item.city.name === offer.city?.name && item.id !== offer.id
+                    item.city.name === currentOffer.city?.name && item.id !== currentOffer.id
                 )
                 .slice(0, 3)}
             />
@@ -160,10 +168,10 @@ function Offer() {
               Other places in the neighbourhood
             </h2>
             <OffersList
-              offersType={offers
+              offersType={nearbyOffers
                 .filter(
                   (item) =>
-                    item.city.name === offer.city?.name && item.id !== offer.id
+                    item.city.name === currentOffer.city?.name && item.id !== currentOffer.id
                 )
                 .slice(0, 3)}
             />
