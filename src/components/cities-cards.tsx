@@ -15,14 +15,12 @@ function CitiesCard({
   onMouseEnter,
   onMouseLeave,
 }: CitiesCardProps) {
-
   return (
     <div
       className={`cities__place-card place-card ${isActive ? 'active' : ''}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-
       <article className="cities__card place-card">
         {offer.isPremium && (
           <div className="place-card__mark">
@@ -48,11 +46,7 @@ function CitiesCard({
               className="place-card__bookmark-button button"
               type="button"
             >
-              <svg
-                className="place-card__bookmark-icon"
-                width="18"
-                height="19"
-              >
+              <svg className="place-card__bookmark-icon" width="18" height="19">
                 <use xlinkHref="#icon-bookmark"></use>
               </svg>
               <span className="visually-hidden">To bookmarks</span>
@@ -72,7 +66,6 @@ function CitiesCard({
           <p className="place-card__type">{offer.type}</p>
         </div>
       </article>
-
     </div>
   );
 }

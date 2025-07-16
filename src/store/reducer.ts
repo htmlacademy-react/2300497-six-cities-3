@@ -5,7 +5,6 @@ import { AuthorizationStatus } from '../const/const';
 import { saveToken } from '../services/token';
 import { clearToken } from '../services/token';
 import { AxiosInstance } from 'axios';
-import { ReviewTypes } from '../mocks/offer';
 
 export type SortType =
   | 'Popular'
@@ -61,10 +60,10 @@ export const loadOffersFromServer = createAsyncThunk<OfferTypes[]>(
 );
 
 export const checkAuth = createAsyncThunk<
-  UserData,
+  User,
   void,
   { dispatch; extra: AxiosInstance }
->('user/checkAuth', async (_, { extra: api, dispatch }) => {
+>('user/checkAuth', async (_, { extra: dispatch }) => {
   try {
     const response = await api.get('/login');
     dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
@@ -127,7 +126,9 @@ export const loadOfferById = createAsyncThunk<
 >('offers/loadOfferById', async (offerId, { extra: api }) => {
   try {
     const offerResponse = await api.get<OfferTypes>(`/offers/${offerId}`);
-    const nearbyResponse = await api.get<OfferTypes[]>(`/offers/${offerId}/nearby`);
+    const nearbyResponse = await api.get<OfferTypes[]>(
+      `/offers/${offerId}/nearby`
+    );
 
     return {
       offer: offerResponse.data,
@@ -169,25 +170,25 @@ const offersSlice = createSlice({
         state.nearbyOffers = action.payload.nearby;
       })
       .addCase(loadOfferById.rejected, (state) => {
-        state.currentOffer = null; 
+        state.currentOffer = null;
       })
 
       .addCase(loadOffersFromServer.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-    .addCase(loadOffersFromServer.fulfilled, (state, action) => {
-      state.allOffers = action.payload;
-      state.offers = action.payload.filter(
-        (offer) => offer.city.name === state.city
-      );
-      state.isLoading = false;
-    })
-    .addCase(loadOffersFromServer.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload as string;
-    });
-},
+      .addCase(loadOffersFromServer.fulfilled, (state, action) => {
+        state.allOffers = action.payload;
+        state.offers = action.payload.filter(
+          (offer) => offer.city.name === state.city
+        );
+        state.isLoading = false;
+      })
+      .addCase(loadOffersFromServer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
+  },
 });
 
 export const {

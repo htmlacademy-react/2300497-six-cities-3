@@ -2,7 +2,6 @@ import { useState } from 'react';
 import CitiesCard from './cities-cards';
 import { OfferTypes } from '../mocks/offer';
 
-
 type OffersListProps = {
   offersType: OfferTypes[];
   onActiveCardChange?: (id: number | null) => void;
@@ -10,7 +9,7 @@ type OffersListProps = {
 
 function OffersList({ offersType, onActiveCardChange }: OffersListProps) {
   const [activeCard, setActiveCard] = useState<number | null>(null);
-  
+
   const handleMouseEnter = (id: number) => {
     setActiveCard(id);
     if (onActiveCardChange) {

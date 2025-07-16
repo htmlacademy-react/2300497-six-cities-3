@@ -10,7 +10,6 @@ import Spinner from '../../components/spinner';
 import { checkAuth } from '../../store/reducer';
 import Header from '../../components/header';
 
-
 function MainPage() {
   const dispatch = useDispatch();
   const city = useSelector((state: State) => state.city);
@@ -18,7 +17,7 @@ function MainPage() {
   const sortType = useSelector((state: State) => state.sortType);
   const isLoading = useSelector((state: State) => state.isLoading);
 
-  const [activeOfferId, setActiveOfferId] = useState<number | null>(null)
+  const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
 
   useEffect(() => {
     dispatch(checkAuth());
@@ -61,9 +60,9 @@ function MainPage() {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{`${sortedOffers.length} places to stay in ${city}`}</b>
               <SortOptions />
-              <OffersList 
-              offersType={sortedOffers}
-              onActiveCardChange={setActiveOfferId}
+              <OffersList
+                offersType={sortedOffers}
+                onActiveCardChange={setActiveOfferId}
               />
             </section>
             <div className="cities__right-section">
