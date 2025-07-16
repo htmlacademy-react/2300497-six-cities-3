@@ -1,6 +1,7 @@
 import Header from '../../components/header';
 import { OfferTypes } from '../../mocks/offer';
 import CitiesCard from '../../components/cities-cards';
+import { useState, useEffect } from 'react';
 
 type FavoritesProps = {
   favoriteOffers: OfferTypes[];
@@ -17,6 +18,13 @@ function Favorites({ favoriteOffers }: FavoritesProps) {
     },
     {}
   );
+
+  useEffect(() => {
+    fetch('')
+      .then((res) => res.json())
+      .then((data) => setFavoriteOffers(data))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <div className="page">

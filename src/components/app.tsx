@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../const/const';
-import { useSelector } from 'react-redux';
+import { AppRoute } from '../const/const';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { checkAuth } from '../store/reducer';
 import { State } from '../types/state';
 import PrivateRoute from '../components/private-route';
 import MainPage from '../pages/main-page/main-page';
@@ -11,8 +13,12 @@ import Offer from '../pages/offer/offer';
 import offersCards from '../mocks/offers';
 
 function App(): JSX.Element {
-
+  const dispatch = useDispatch();
   const status = useSelector((state: State) => state.authorizationStatus);
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
