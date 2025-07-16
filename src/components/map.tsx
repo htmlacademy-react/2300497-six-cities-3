@@ -12,7 +12,7 @@ export type MapProps = {
     };
   };
   offers: OfferTypes[];
-  activeOfferId: number | null;
+  activeOfferId?: number | null;
 };
 
 function createCustomMarkerIcon(color = '#007AFF') {
@@ -36,7 +36,7 @@ function createCustomMarkerIcon(color = '#007AFF') {
           align-items: center;
           justify-content: center;
         "></div>
-        
+
         <div style="
           background-color: white;
           border-radius: 50%;
@@ -59,7 +59,7 @@ function createCustomMarkerIcon(color = '#007AFF') {
       </div>
     `,
     iconSize: [24, 30],
-    iconAnchor: [12, 30] 
+    iconAnchor: [12, 30]
   });
 }
 

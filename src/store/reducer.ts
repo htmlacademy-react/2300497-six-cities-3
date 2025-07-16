@@ -124,11 +124,15 @@ export const loadOfferById = createAsyncThunk<
   string,
   { extra: AxiosInstance }
 >('offers/loadOfferById', async (offerId, { extra: api }) => {
+  console.log('Fetching offer with ID:', offerId);
   try {
     const offerResponse = await api.get<OfferTypes>(`/offers/${offerId}`);
     const nearbyResponse = await api.get<OfferTypes[]>(
       `/offers/${offerId}/nearby`
     );
+
+    console.log('Offer data:', offerResponse.data);
+    console.log('Nearby offers:', nearbyResponse.data);
 
     return {
       offer: offerResponse.data,

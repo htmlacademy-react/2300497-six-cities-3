@@ -9,12 +9,12 @@ import ReviewsForm from '../../components/comment-form';
 import CommentList from '../../components/comments-list';
 import Header from '../../components/header';
 import { getOfferWithNearby } from '../../store/selectors';
-import Spinner from '../../components/spinner';
+import { AppDispatch } from '../../store';
 
 function Offer() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch();
-  const { currentOffer, nearbyOffers } = useSelector(getOfferWithNearby);
+  const dispatch = useDispatch<AppDispatch>();
+  const { currentOffer, nearby } = useSelector(getOfferWithNearby);
 
   useEffect(() => {
     if (id) {
@@ -23,18 +23,26 @@ function Offer() {
   }, [dispatch, id]);
 
   if (!currentOffer) {
-    return <Spinner />;
+    return <NotFoundScreen />;
   }
 
   return (
     <div className="page">
-      <Header/>
+      <Header />
 
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {currentOffer.images}
+              {currentOffer.images.map((image, index) => (
+                <div className="offer__image-wrapper" key={index}>
+                  <img
+                    src={image}
+                    alt={`Photo of ${currentOffer.title}`}
+                    className="offer__image"
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className="offer__container container">
@@ -48,7 +56,9 @@ function Offer() {
                 <h1 className="offer__name">{currentOffer.title}</h1>
                 <button
                   className={`offer__bookmark-button button ${
-                    currentOffer.isFavorite ? 'offer__bookmark-button--active' : ''
+                    currentOffer.isFavorite
+                      ? 'offer__bookmark-button--active'
+                      : ''
                   }`}
                   type="button"
                 >
@@ -77,10 +87,12 @@ function Offer() {
                   {currentOffer.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {currentOffer.bedrooms} Bedroom{currentOffer.bedrooms !== 1 ? 's' : ''}
+                  {currentOffer.bedrooms} Bedroom
+                  {currentOffer.bedrooms !== 1 ? 's' : ''}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {currentOffer.maxAdults} adult{currentOffer.maxAdults !== 1 ? 's' : ''}
+                  Max {currentOffer.maxAdults} adult
+                  {currentOffer.maxAdults !== 1 ? 's' : ''}
                 </li>
               </ul>
               <div className="offer__price">
@@ -106,7 +118,9 @@ function Offer() {
                 <div className="offer__host-user user">
                   <div
                     className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      currentOffer.host?.isPro ? 'offer__avatar-wrapper--pro' : ''
+                      currentOffer.host?.isPro
+                        ? 'offer__avatar-wrapper--pro'
+                        : ''
                     }`}
                   >
                     <img
@@ -117,7 +131,9 @@ function Offer() {
                       alt="Host avatar"
                     />
                   </div>
-                  <span className="offer__user-name">{currentOffer.host?.name}</span>
+                  <span className="offer__user-name">
+                    {currentOffer.host?.name}
+                  </span>
                   {currentOffer.host?.isPro && (
                     <span className="offer__user-status">Pro</span>
                   )}
@@ -153,12 +169,14 @@ function Offer() {
           >
             <Map
               city={currentOffer.city}
-              offers={nearbyOffers
+              offers={nearby
                 .filter(
                   (item) =>
-                    item.city.name === currentOffer.city?.name && item.id !== currentOffer.id
+                    item.city.name === currentOffer.city?.name &&
+                    item.id !== currentOffer.id
                 )
                 .slice(0, 3)}
+              activeOfferId={currentOffer.id}
             />
           </section>
         </section>
@@ -168,10 +186,11 @@ function Offer() {
               Other places in the neighbourhood
             </h2>
             <OffersList
-              offersType={nearbyOffers
+              offersType={nearby
                 .filter(
                   (item) =>
-                    item.city.name === currentOffer.city?.name && item.id !== currentOffer.id
+                    item.city.name === currentOffer.city?.name &&
+                    item.id !== currentOffer.id
                 )
                 .slice(0, 3)}
             />
