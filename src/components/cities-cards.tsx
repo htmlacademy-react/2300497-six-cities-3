@@ -60,7 +60,7 @@ function CitiesCard({
           </div>
           <Link to={`/offer/${offer.id}`}>
             <h2 className="place-card__name">
-              <a href="#">{offer.title}</a>
+              <div>{offer.title}</div>
             </h2>
           </Link>
           <p className="place-card__type">{offer.type}</p>

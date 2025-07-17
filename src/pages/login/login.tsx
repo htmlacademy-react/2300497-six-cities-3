@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate} from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../../store/reducer';
 import { State } from '../../types/state';
 import { Link } from 'react-router-dom';
@@ -27,10 +27,10 @@ function Login() {
     dispatch(login({ email, password }));
   };
 
-   const handleCityClick = (city: string) => {
-      dispatch(changeCity(city));
-      navigate('/');
-    };
+  const handleCityClick = (city: string) => {
+    dispatch(changeCity(city));
+    navigate('/');
+  };
 
   if (status === 'AUTH') {
     return <Navigate to="/" />;
@@ -63,21 +63,47 @@ function Login() {
             <form className="login__form form" onSubmit={handleSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input" type="email" name="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input
+                  className="login__input form__input"
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input className="login__input form__input" type="password" name="password" placeholder="Password" minLength={1} required value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input
+                  className="login__input form__input"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  minLength={1}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
-              <button className="login__submit form__submit button" type="submit">Sign in</button>
+              <button
+                className="login__submit form__submit button"
+                type="submit"
+              >
+                Sign in
+              </button>
             </form>
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#" onClick={(e) => {
-              e.preventDefault();
-              handleCityClick(currentCity);
-            }}>
+              <a
+                className="locations__item-link"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleCityClick(currentCity);
+                }}
+              >
                 <span>{currentCity}</span>
               </a>
             </div>

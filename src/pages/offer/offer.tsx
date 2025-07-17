@@ -1,24 +1,31 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadOfferById } from '../../store/reducer';
+import {
+  loadOfferById,
+  loadCommentsById,
+  selectComments,
+} from '../../store/reducer';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
 import OffersList from '../../components/OffersList';
-import ReviewsForm from '../../components/comment-form';
 import CommentList from '../../components/comments-list';
 import Header from '../../components/header';
 import { getOfferWithNearby } from '../../store/selectors';
 import { AppDispatch } from '../../store';
+import ErrorBoundary from '../../components/error-boundary';
 
 function Offer() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { currentOffer, nearby } = useSelector(getOfferWithNearby);
+  const comments = useSelector((state: RootState) => state.offers.comments);
+  console.log('comments:', comments);
 
   useEffect(() => {
     if (id) {
       dispatch(loadOfferById(id));
+      dispatch(loadCommentsById(id));
     }
   }, [dispatch, id]);
 
@@ -74,8 +81,7 @@ function Offer() {
                 <div className="offer__stars rating__stars">
                   <span
                     style={{ width: `${(currentOffer.rating / 5) * 100}%` }}
-                  >
-                  </span>
+                  ></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
@@ -146,15 +152,14 @@ function Offer() {
                   ))}
                 </div>
               </div>
-              <section className="offer__reviews reviews">
+              <section className="offer__section offer__section--reviews">
                 <h2 className="reviews__title">
                   Reviews &middot;{' '}
-                  <span className="reviews__amount">
-                    {currentOffer.reviews?.length}
-                  </span>
+                  <span className="reviews__amount">{comments?.length}</span>
                 </h2>
-                {<CommentList reviews={currentOffer.reviews} />}
-                {<ReviewsForm />}
+                <ErrorBoundary>
+                  <CommentList />
+                </ErrorBoundary>
               </section>
             </div>
           </div>

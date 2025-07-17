@@ -2,12 +2,29 @@ import Header from '../../components/header';
 import { OfferTypes } from '../../mocks/offer';
 import CitiesCard from '../../components/cities-cards';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { api } from '../../api';
+import { Navigate } from 'react-router-dom';
+import { State } from '../../types/state';
+import { loadFavoritesFromServer } from '../../store/reducer';
 
 type FavoritesProps = {
   favoriteOffers: OfferTypes[];
 };
 
 function Favorites({ favoriteOffers }: FavoritesProps) {
+  const status = useSelector((state: State) => state.authorizationStatus);
+  const dispatch = useDispatch();
+  const favOff = useSelector((state: any) => state.offers.favOff);
+
+  useEffect(() => {
+    dispatch(loadFavoritesFromServer());
+  }, [dispatch]);
+
+  if (status !== 'AUTH') {
+    return <Navigate to="/login" />;
+  }
+
   const offersByCity = favoriteOffers.reduce<Record<string, OfferTypes[]>>(
     (acc, offer) => {
       if (!acc[offer.city]) {
@@ -20,10 +37,10 @@ function Favorites({ favoriteOffers }: FavoritesProps) {
   );
 
   useEffect(() => {
-    fetch('')
-      .then((res) => res.json())
-      .then((data) => setFavoriteOffers(data))
-      .catch((err) => console.error(err));
+    api
+      .get('/favorites')
+      .then((res) => setFavoriteOffers(res.data))
+      .catch((err) => console.error('Ошибка загрузки избранного:', err));
   }, []);
 
   return (
