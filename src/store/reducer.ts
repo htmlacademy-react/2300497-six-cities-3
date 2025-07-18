@@ -1,4 +1,8 @@
-import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
 import { api } from '../api';
 import { AuthorizationStatus } from '../const/const';
@@ -42,7 +46,7 @@ const initialState: OffersState = {
   offers: [],
   allOffers: [],
   sortType: 'Popular',
-  isLoading: false,
+  isLoading: true,
   error: null,
   isCheckingAuth: true,
   authorizationStatus: AuthorizationStatus.Unknown,
@@ -78,11 +82,17 @@ const offersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(loadOfferById.pending, (state) => {
+        state.isLoading = true;
+        state.currentOffer = null;
+      })
       .addCase(loadOfferById.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.currentOffer = action.payload.offer;
-        state.nearbyOffers = action.payload.nearby;
+        state.nearby = action.payload.nearby;
       })
       .addCase(loadOfferById.rejected, (state) => {
+        state.isLoading = false;
         state.currentOffer = null;
       })
 

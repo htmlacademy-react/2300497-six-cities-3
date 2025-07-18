@@ -1,10 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  loadOfferById,
-  loadCommentsById,
-  selectComments,
-} from '../../store/reducer';
+import { loadOfferById, loadCommentsById } from '../../store/reducer';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
@@ -14,11 +10,12 @@ import Header from '../../components/header';
 import { getOfferWithNearby } from '../../store/selectors';
 import { AppDispatch } from '../../store';
 import ErrorBoundary from '../../components/error-boundary';
+import Spinner from '../../components/spinner';
 
 function Offer() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { currentOffer, nearby } = useSelector(getOfferWithNearby);
+  const { currentOffer, nearby, isLoading } = useSelector(getOfferWithNearby);
   const comments = useSelector((state: RootState) => state.offers.comments);
   console.log('comments:', comments);
 
@@ -28,6 +25,10 @@ function Offer() {
       dispatch(loadCommentsById(id));
     }
   }, [dispatch, id]);
+
+  if (isLoading) {
+    return <Spinner/>;
+  }
 
   if (!currentOffer) {
     return <NotFoundScreen />;
