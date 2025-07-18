@@ -1,20 +1,23 @@
 import Header from '../../components/header';
 import { OfferTypes } from '../../mocks/offer';
 import CitiesCard from '../../components/cities-cards';
-import {  useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { State } from '../../types/state';
 import { loadFavoritesFromServer } from '../../store/reducer';
+import { AppDispatch } from '../../store';
+import { selectFavoriteOffers } from '../../store/selectors';
 
-type FavoritesProps = {
-  favoriteOffers: OfferTypes[];
-};
 
-function Favorites({ favoriteOffers }: FavoritesProps) {
+
+function Favorites() {
   const status = useSelector((state: State) => state.authorizationStatus);
-  const dispatch = useDispatch();
-  const favOff = useSelector((state: any) => state.offers.favOff);
+  const dispatch = useDispatch<AppDispatch>();
+  const favoriteOffers = useSelector(selectFavoriteOffers);
+
+  console.log('favoriteOffers:', favoriteOffers);
+
 
   useEffect(() => {
     dispatch(loadFavoritesFromServer());
@@ -26,15 +29,21 @@ function Favorites({ favoriteOffers }: FavoritesProps) {
 
   const offersByCity = favoriteOffers.reduce<Record<string, OfferTypes[]>>(
     (acc, offer) => {
-      if (!acc[offer.city]) {
-        acc[offer.city] = [];
+      const cityName = offer.city.name;
+
+      if (!acc[cityName]) {
+        acc[cityName] = [];
       }
-      acc[offer.city].push(offer);
+
+      acc[cityName].push(offer);
       return acc;
     },
     {}
   );
 
+  if (!favoriteOffers || favoriteOffers.length === 0) {
+  return <p>Нет избранных предложений</p>;
+}
 
   return (
     <div className="page">
@@ -55,7 +64,9 @@ function Favorites({ favoriteOffers }: FavoritesProps) {
                   </div>
                   <div className="favorites__places">
                     {cityOffers.map((offer) => (
-                      <CitiesCard key={offer.id} offer={offer} />
+                      <CitiesCard key={offer.id} offer={offer} isActive={false}
+                        onMouseEnter={() => { }}
+                        onMouseLeave={() => { }} />
                     ))}
                   </div>
                 </li>
@@ -65,7 +76,7 @@ function Favorites({ favoriteOffers }: FavoritesProps) {
         </div>
       </main>
       <footer className="footer container">
-        <a className="footer__logo-link" href="main.html">
+        <Link to="/" className="footer__logo-link">
           <img
             className="footer__logo"
             src="img/logo.svg"
@@ -73,7 +84,7 @@ function Favorites({ favoriteOffers }: FavoritesProps) {
             width="64"
             height="33"
           />
-        </a>
+        </Link>
       </footer>
     </div>
   );

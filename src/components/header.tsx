@@ -3,11 +3,15 @@ import { State } from '../types/state';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/reducer';
+import { selectFavoriteOffers } from '../store/selectors';
+import { AppDispatch } from '../store';
 
 function Header() {
   const status = useSelector((state: State) => state.authorizationStatus);
   const user = useSelector((state: State) => state.user);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const favoriteOffers = useSelector(selectFavoriteOffers);
+  const count = favoriteOffers.length;
 
   const handleSignOut = () => {
     dispatch(logout());
@@ -42,7 +46,7 @@ function Header() {
                       <span className="header__user-name user__name">
                         {user?.email || 'User'}
                       </span>
-                      <span className="header__favorite-count">3</span>
+                      <span className="header__favorite-count">{count}</span>
                     </Link>
                   </li>
                   <li className="header__nav-item">

@@ -1,6 +1,11 @@
 import { OfferTypes } from '../mocks/offer';
 import { MouseEventHandler } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux/es/hooks/useSelector';
+import { AppDispatch } from '../store';
+import { selectIsAuthorized } from '../store/selectors';
+import { toggleFavorite } from '../store/reducer';
 
 type CitiesCardProps = {
   offer: OfferTypes;
@@ -15,6 +20,22 @@ function CitiesCard({
   onMouseEnter,
   onMouseLeave,
 }: CitiesCardProps) {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuthorized = useSelector(selectIsAuthorized);
+  const navigate = useNavigate();
+
+  const handleFavoriteClick = () => {
+    if (!isAuthorized) {
+      navigate('/login');
+      return;
+    }
+
+    const newStatus = offer.isFavorite ? 0 : 1;
+
+    dispatch(toggleFavorite({ offerId: offer.id, status: newStatus }));
+  };
+
   return (
     <div
       className={`cities__place-card place-card ${isActive ? 'active' : ''}`}
@@ -45,6 +66,7 @@ function CitiesCard({
             <button
               className="place-card__bookmark-button button"
               type="button"
+              onClick={handleFavoriteClick}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">
                 <use xlinkHref="#icon-bookmark"></use>

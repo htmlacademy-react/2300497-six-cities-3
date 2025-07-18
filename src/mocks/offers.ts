@@ -1,4 +1,4 @@
-import { OfferTypes } from './offer';
+/*import { OfferTypes } from './offer';
 
 const offersCards: OfferTypes[] = [
   {
@@ -195,4 +195,4 @@ const offersCards: OfferTypes[] = [
   },
 ];
 
-export default offersCards;
+export default offersCards;*/

@@ -10,10 +10,10 @@ import Favorites from '../pages/favorites/favorites';
 import NotFoundScreen from '../components/not-found';
 import Login from '../pages/login/login';
 import Offer from '../pages/offer/offer';
-import offersCards from '../mocks/offers';
+import { AppDispatch } from '../store';
 
 function App(): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const status = useSelector((state: State) => state.authorizationStatus);
 
   useEffect(() => {
@@ -28,9 +28,7 @@ function App(): JSX.Element {
           path={AppRoute.Favorites}
           element={
             <PrivateRoute authorizationStatus={status}>
-              <Favorites
-                favoriteOffers={offersCards.filter((offer) => offer.isFavorite)}
-              />
+              <Favorites/>
             </PrivateRoute>
           }
         />

@@ -5,6 +5,13 @@ import { OfferTypes } from '../mocks/offer';
 export const getCurrentOffer = (state: RootState) => state.currentOffer;
 export const getNearbyOffers = (state: RootState) => state.nearbyOffers;
 export const getIsLoading = (state: RootState) => state.isLoading;
+export const selectFavoriteOffers = (state: RootState) => state.favoriteOffers;
+export const selectUser = (state: RootState) => state.user;
+
+export const selectIsAuthorized = createSelector(
+  [selectUser],
+  (user) => Boolean(user)
+);
 
 export const getOfferWithNearby = createSelector(
   [

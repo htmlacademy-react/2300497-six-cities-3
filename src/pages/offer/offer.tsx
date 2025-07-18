@@ -13,7 +13,9 @@ import ErrorBoundary from '../../components/error-boundary';
 import Spinner from '../../components/spinner';
 import { RootState } from '../../store';
 import ReviewsForm from '../../components/comment-form';
-import { selectIsAuthorized } from '../../store/reducer';
+import { selectIsAuthorized } from '../../store/selectors';
+import { useNavigate } from 'react-router-dom';
+import { toggleFavorite } from '../../store/reducer';
 
 function Offer() {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +23,22 @@ function Offer() {
   const { currentOffer, nearby, isLoading } = useSelector(getOfferWithNearby);
   const comments = useSelector((state: RootState) => state.comments);
   const isAuthorized = useSelector(selectIsAuthorized);
+  const navigate = useNavigate();
+
+  const handleFavoriteClick = () => {
+    if (!isAuthorized) {
+      navigate('/login');
+      return;
+    }
+
+    if (!currentOffer) {
+      return;
+    }
+
+    const newStatus = currentOffer.isFavorite ? 0 : 1;
+
+    dispatch(toggleFavorite({ offerId: currentOffer.id, status: newStatus }));
+  };
 
   useEffect(() => {
     if (id) {
@@ -36,10 +54,6 @@ function Offer() {
   if (!currentOffer) {
     return <NotFoundScreen />;
   }
-
-  console.log('currentOffer:', currentOffer);
-  console.log('nearby:', nearby);
-  console.log('isLoading:', isLoading);
 
   const filtered = nearby.filter(
     (item) =>
@@ -83,6 +97,7 @@ function Offer() {
                     : ''
                     }`}
                   type="button"
+                  onClick={handleFavoriteClick}
                 >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
@@ -192,7 +207,7 @@ function Offer() {
               offers={nearby
                 .filter(
                   (item) =>
-                    item.city.name === currentOffer.city?.name &&
+                    item.city.name === currentOffer.city.name &&
                     item.id !== currentOffer.id
                 )
                 .slice(0, 3)}
@@ -209,7 +224,7 @@ function Offer() {
               offersType={nearby
                 .filter(
                   (item) =>
-                    item.city.name === currentOffer.city?.name &&
+                    item.city.name === currentOffer.city.name &&
                     item.id !== currentOffer.id
                 )
                 .slice(0, 3)}
