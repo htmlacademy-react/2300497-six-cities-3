@@ -10,7 +10,7 @@ import { saveToken } from '../services/token';
 import { clearToken } from '../services/token';
 import { AxiosInstance } from 'axios';
 import { ReviewTypes } from '../mocks/offer';
-import { RootState } from '.';
+import { AppDispatch, RootState } from '.';
 
 export type SortType =
   | 'Popular'
@@ -37,7 +37,7 @@ export type OffersState = {
   user: User | null;
   currentOffer: OfferTypes | null;
   nearbyOffers: OfferTypes[];
-  favoriteOffers: [];
+  favoriteOffers: OfferTypes[];
   comments: ReviewTypes[];
 };
 
@@ -89,7 +89,7 @@ const offersSlice = createSlice({
       .addCase(loadOfferById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.currentOffer = action.payload.offer;
-        state.nearby = action.payload.nearby;
+        state.nearbyOffers = action.payload.nearby;
         console.log('payload.nearby:', action.payload.nearby);
       })
       .addCase(loadOfferById.rejected, (state) => {
@@ -102,6 +102,7 @@ const offersSlice = createSlice({
         state.error = null;
       })
       .addCase(loadFavoritesFromServer.fulfilled, (state, action) => {
+        console.log('Загружено избранное:', action.payload);
         state.favoriteOffers = action.payload;
         state.isLoading = false;
       })
@@ -174,7 +175,7 @@ export const loadFavoritesFromServer = createAsyncThunk<OfferTypes[]>(
 export const checkAuth = createAsyncThunk<
   User,
   void,
-  { dispatch; extra: AxiosInstance }
+  { dispatch: AppDispatch; extra: AxiosInstance }
 >('user/checkAuth', async (_, { dispatch }) => {
   try {
     const response = await api.get('/login');
@@ -199,6 +200,20 @@ export const loadCommentsById = createAsyncThunk<
     return response.data;
   } catch (error) {
     throw new Error('Не удалось загрузить комментарии');
+  }
+});
+
+export const toggleFavorite = createAsyncThunk<
+  OfferTypes,
+  { offerId: string; status: 1 | 0 },
+  { extra: AxiosInstance; dispatch: AppDispatch }
+>('offers/toggleFavorite', async ({ offerId, status }, { extra: api, dispatch }) => {
+  try {
+    const response = await api.post<OfferTypes>(`/favorite/${offerId}/${status}`);
+    dispatch(loadFavoritesFromServer());
+    return response.data;
+  } catch (error) {
+    return Promise.reject('Ошибка при обновлении избранного');
   }
 });
 
@@ -294,13 +309,6 @@ export const logout = createAsyncThunk(
 export const selectComments = createSelector(
   [(state: RootState) => state.comments],
   (comments) => comments || []
-);
-
-export const selectUser = (state: RootState) => state.user;
-
-export const selectIsAuthorized = createSelector(
-  [selectUser],
-  (user) => Boolean(user)
 );
 
 export default offersSlice.reducer;

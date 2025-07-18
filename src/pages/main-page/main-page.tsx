@@ -8,9 +8,10 @@ import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';
 import Spinner from '../../components/spinner';
 import Header from '../../components/header';
+import { AppDispatch } from '../../store';
 
 function MainPage() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const city = useSelector((state: State) => state.city);
   const offers = useSelector((state: State) => state.offers);
   const sortType = useSelector((state: State) => state.sortType);
