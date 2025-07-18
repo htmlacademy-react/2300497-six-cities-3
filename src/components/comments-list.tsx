@@ -1,18 +1,16 @@
-import { ReviewTypes } from '../mocks/offer';
+import { useSelector } from 'react-redux';
+import { selectComments } from '../store/reducer';
 import Comment from './comment';
 
-type CommentsListProp = {
-  reviews: ReviewTypes[];
-};
+function CommentList() {
+  const comments = useSelector(selectComments);
 
-function CommentList({ reviews }: CommentsListProp) {
   return (
     <ul className="reviews__list">
-      {reviews?.map((review) => (
+      {comments.map((review) => (
         <Comment key={review.id} review={review} />
       ))}
     </ul>
   );
 }
-
 export default CommentList;

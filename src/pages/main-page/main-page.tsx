@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadOffersFromServer} from '../../store/reducer';
+import { loadOffersFromServer } from '../../store/reducer';
 import { State } from '../../types/state';
 import OffersList from '../../components/OffersList';
 import Map from '../../components/map';
 import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';
 import Spinner from '../../components/spinner';
-import { checkAuth } from '../../store/reducer';
 import Header from '../../components/header';
 
 function MainPage() {
@@ -17,8 +16,9 @@ function MainPage() {
   const sortType = useSelector((state: State) => state.sortType);
   const isLoading = useSelector((state: State) => state.isLoading);
 
+  const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
+
   useEffect(() => {
-    dispatch(checkAuth());
     dispatch(loadOffersFromServer());
   }, [dispatch]);
 
@@ -44,7 +44,7 @@ function MainPage() {
 
   return (
     <div className="page page--gray page--main">
-      <Header/>
+      <Header />
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
@@ -58,9 +58,10 @@ function MainPage() {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{`${sortedOffers.length} places to stay in ${city}`}</b>
               <SortOptions />
-              <div className="cities__places-list places__list tabs__content">
-                <OffersList offersType={sortedOffers} />
-              </div>
+              <OffersList
+                offersType={sortedOffers}
+                onActiveCardChange={setActiveOfferId}
+              />
             </section>
             <div className="cities__right-section">
               <Map
@@ -72,6 +73,7 @@ function MainPage() {
                   },
                 }}
                 offers={sortedOffers}
+                activeOfferId={activeOfferId}
               />
             </div>
           </div>
