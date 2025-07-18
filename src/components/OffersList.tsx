@@ -4,13 +4,13 @@ import { OfferTypes } from '../mocks/offer';
 
 type OffersListProps = {
   offersType: OfferTypes[];
-  onActiveCardChange?: (id: number | null) => void;
+  onActiveCardChange?: (id: string | null) => void;
 };
 
 function OffersList({ offersType, onActiveCardChange }: OffersListProps) {
-  const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [activeCard, setActiveCard] = useState<string | null>(null);
 
-  const handleMouseEnter = (id: number) => {
+  const handleMouseEnter = (id: string) => {
     setActiveCard(id);
     if (onActiveCardChange) {
       onActiveCardChange(id);
