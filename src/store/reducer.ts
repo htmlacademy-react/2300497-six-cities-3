@@ -128,9 +128,7 @@ const offersSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loadCommentsById.fulfilled, (state, action) => {
-        console.log('Комментарии получены:', action.payload);
         state.comments = action.payload;
-        console.log('comments записаны в стор:', state.comments);
         state.isLoading = false;
       })
       .addCase(loadCommentsById.rejected, (state) => {
@@ -197,13 +195,34 @@ export const loadCommentsById = createAsyncThunk<
 >('offers/loadCommentsById', async (offerId, { extra: api }) => {
   try {
     const response = await api.get<ReviewTypes[]>(`/comments/${offerId}`);
-    console.log('Комментарии получены:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Ошибка при загрузке комментариев:', error);
     throw new Error('Не удалось загрузить комментарии');
   }
 });
+
+export const sendComment = createAsyncThunk<
+  ReviewTypes, // тип возвращаемого значения
+  { offerId: string; comment: string; rating: number }, // параметры
+  { extra: AxiosInstance }
+>(
+  'offers/sendComment',
+  async ({ offerId, comment, rating }, { extra: api, rejectWithValue, dispatch }) => {
+    try {
+      const response = await api.post<ReviewTypes>(`/comments/${offerId}`, {
+        comment,
+        rating,
+      });
+
+      // можно сразу обновить список комментариев
+      dispatch(loadCommentsById(offerId));
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Ошибка при отправке комментария');
+    }
+  }
+);
 
 export const loadOfferById = createAsyncThunk<
   { offer: OfferTypes; nearby: OfferTypes[] },
@@ -273,8 +292,15 @@ export const logout = createAsyncThunk(
 );
 
 export const selectComments = createSelector(
-  [(state: RootState) => state.offers.comments],
+  [(state: RootState) => state.comments],
   (comments) => comments || []
+);
+
+export const selectUser = (state: RootState) => state.user;
+
+export const selectIsAuthorized = createSelector(
+  [selectUser],
+  (user) => Boolean(user)
 );
 
 export default offersSlice.reducer;

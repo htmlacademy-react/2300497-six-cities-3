@@ -12,13 +12,15 @@ import { AppDispatch } from '../../store';
 import ErrorBoundary from '../../components/error-boundary';
 import Spinner from '../../components/spinner';
 import { RootState } from '../../store';
+import ReviewsForm from '../../components/comment-form';
+import { selectIsAuthorized } from '../../store/reducer';
 
 function Offer() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { currentOffer, nearby, isLoading } = useSelector(getOfferWithNearby);
   const comments = useSelector((state: RootState) => state.comments);
-  console.log('comments:', comments);
+  const isAuthorized = useSelector(selectIsAuthorized);
 
   useEffect(() => {
     if (id) {
@@ -28,7 +30,7 @@ function Offer() {
   }, [dispatch, id]);
 
   if (isLoading) {
-    return <Spinner/>;
+    return <Spinner />;
   }
 
   if (!currentOffer) {
@@ -64,11 +66,10 @@ function Offer() {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{currentOffer.title}</h1>
                 <button
-                  className={`offer__bookmark-button button ${
-                    currentOffer.isFavorite
-                      ? 'offer__bookmark-button--active'
-                      : ''
-                  }`}
+                  className={`offer__bookmark-button button ${currentOffer.isFavorite
+                    ? 'offer__bookmark-button--active'
+                    : ''
+                    }`}
                   type="button"
                 >
                   <svg className="offer__bookmark-icon" width="31" height="33">
@@ -125,11 +126,10 @@ function Offer() {
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div
-                    className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      currentOffer.host?.isPro
-                        ? 'offer__avatar-wrapper--pro'
-                        : ''
-                    }`}
+                    className={`offer__avatar-wrapper user__avatar-wrapper ${currentOffer.host?.isPro
+                      ? 'offer__avatar-wrapper--pro'
+                      : ''
+                      }`}
                   >
                     <img
                       className="offer__avatar user__avatar"
@@ -162,6 +162,7 @@ function Offer() {
                 <ErrorBoundary>
                   <CommentList />
                 </ErrorBoundary>
+                {isAuthorized && <ReviewsForm />}
               </section>
             </div>
           </div>

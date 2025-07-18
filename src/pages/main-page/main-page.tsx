@@ -7,7 +7,6 @@ import Map from '../../components/map';
 import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';
 import Spinner from '../../components/spinner';
-import { checkAuth } from '../../store/reducer';
 import Header from '../../components/header';
 
 function MainPage() {
@@ -20,7 +19,6 @@ function MainPage() {
   const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
 
   useEffect(() => {
-    dispatch(checkAuth());
     dispatch(loadOffersFromServer());
   }, [dispatch]);
 

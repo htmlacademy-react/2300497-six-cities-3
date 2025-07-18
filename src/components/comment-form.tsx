@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { sendComment } from '../store/reducer';
+import { useParams } from 'react-router-dom';
+
 
 function ReviewsForm() {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
+  const dispatch = useDispatch();
+  const { id } = useParams();
 
   const handleRatingChange = (value: number) => {
     setRating(value);
@@ -14,8 +20,25 @@ function ReviewsForm() {
 
   const isSubmitDisabled = rating === 0 || reviewText.length < 50;
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!id || isSubmitDisabled) return;
+
+    dispatch(
+      sendComment({
+        offerId: id,
+        comment: reviewText,
+        rating,
+      })
+    );
+
+    setReviewText('');
+    setRating(0);
+  };
+
   return (
-    <form className="reviews__form form" action="#" method="post">
+    <form className="reviews__form form" onSubmit={handleSubmit}>
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
@@ -131,7 +154,6 @@ function ReviewsForm() {
         </p>
         <button
           className="reviews__submit form__submit button"
-          type="submit"
           disabled={isSubmitDisabled}
         >
           Submit
