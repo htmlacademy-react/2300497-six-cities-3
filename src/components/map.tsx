@@ -12,7 +12,7 @@ export type MapProps = {
     };
   };
   offers: OfferTypes[];
-  activeOfferId?: number | null;
+  activeOfferId?: string | null;
 };
 
 function createCustomMarkerIcon(color = '#007AFF') {

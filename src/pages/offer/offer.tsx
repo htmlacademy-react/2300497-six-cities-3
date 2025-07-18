@@ -37,6 +37,10 @@ function Offer() {
     return <NotFoundScreen />;
   }
 
+  console.log('nearby:', nearby);
+  console.log('nearby[0]:', nearby[0]);
+  console.log('nearby[0].city.name:', nearby[0]?.city?.name);
+
   return (
     <div className="page">
       <Header />

@@ -27,6 +27,7 @@ function OffersList({ offersType, onActiveCardChange }: OffersListProps) {
   if (!offersType || offersType.length === 0) {
     return null;
   }
+  console.log('offersType:', offersType);
 
   return (
     <div className="cities__places-list places__list tabs__content">

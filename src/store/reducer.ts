@@ -90,6 +90,7 @@ const offersSlice = createSlice({
         state.isLoading = false;
         state.currentOffer = action.payload.offer;
         state.nearby = action.payload.nearby;
+        console.log('payload.nearby:', action.payload.nearby);
       })
       .addCase(loadOfferById.rejected, (state) => {
         state.isLoading = false;
