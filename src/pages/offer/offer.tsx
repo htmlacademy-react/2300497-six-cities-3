@@ -11,12 +11,13 @@ import { getOfferWithNearby } from '../../store/selectors';
 import { AppDispatch } from '../../store';
 import ErrorBoundary from '../../components/error-boundary';
 import Spinner from '../../components/spinner';
+import { RootState } from '../../store';
 
 function Offer() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { currentOffer, nearby, isLoading } = useSelector(getOfferWithNearby);
-  const comments = useSelector((state: RootState) => state.offers.comments);
+  const comments = useSelector((state: RootState) => state.comments);
   console.log('comments:', comments);
 
   useEffect(() => {
