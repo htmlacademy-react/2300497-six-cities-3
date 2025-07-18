@@ -202,8 +202,8 @@ export const loadCommentsById = createAsyncThunk<
 });
 
 export const sendComment = createAsyncThunk<
-  ReviewTypes, // тип возвращаемого значения
-  { offerId: string; comment: string; rating: number }, // параметры
+  ReviewTypes,
+  { offerId: string; comment: string; rating: number },
   { extra: AxiosInstance }
 >(
   'offers/sendComment',
@@ -214,7 +214,6 @@ export const sendComment = createAsyncThunk<
         rating,
       });
 
-      // можно сразу обновить список комментариев
       dispatch(loadCommentsById(offerId));
 
       return response.data;
