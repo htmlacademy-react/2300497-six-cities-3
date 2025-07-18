@@ -37,9 +37,17 @@ function Offer() {
     return <NotFoundScreen />;
   }
 
+  console.log('currentOffer:', currentOffer);
   console.log('nearby:', nearby);
-  console.log('nearby[0]:', nearby[0]);
-  console.log('nearby[0].city.name:', nearby[0]?.city?.name);
+  console.log('isLoading:', isLoading);
+
+  const filtered = nearby.filter(
+    (item) =>
+      item.city.name === currentOffer?.city?.name &&
+      item.id !== currentOffer?.id
+  );
+
+  console.log('filtered:', filtered);
 
   return (
     <div className="page">

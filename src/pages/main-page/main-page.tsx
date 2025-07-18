@@ -16,7 +16,7 @@ function MainPage() {
   const sortType = useSelector((state: State) => state.sortType);
   const isLoading = useSelector((state: State) => state.isLoading);
 
-  const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(loadOffersFromServer());
