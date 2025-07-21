@@ -15,51 +15,14 @@ export type MapProps = {
   activeOfferId?: string | null;
 };
 
-function createCustomMarkerIcon(color = '#007AFF') {
+function createCustomIcon(isActive = false) {
   return new L.DivIcon({
     className: 'custom-div-icon',
-    html: `
-      <div style="
-        position: relative;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
-        <div style="
-          background-color: ${color};
-          border-radius: 50%;
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "></div>
-
-        <div style="
-          background-color: white;
-          border-radius: 50%;
-          width: 8px;
-          height: 8px;
-          position: absolute;
-        "></div>
-
-        <div style="
-          position: absolute;
-          bottom: -6px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-top: 6px solid ${color};
-        "></div>
-      </div>
-    `,
+    html: `<img src="img/${
+      isActive ? 'pin-active.svg' : 'pin.svg'
+    }" alt="pin" />`,
     iconSize: [24, 30],
-    iconAnchor: [12, 30]
+    iconAnchor: [12, 30],
   });
 }
 
@@ -91,27 +54,28 @@ function Map({ city, offers, activeOfferId }: MapProps) {
     }
   }, [city]);
 
-
   useEffect(() => {
-
     if (markersRef.current) {
-      Object.values(markersRef.current).forEach(marker => marker.removeFrom(mapRef.current!));
+      Object.values(markersRef.current).forEach((marker) =>
+        marker.removeFrom(mapRef.current!)
+      );
     }
 
-
     offers.forEach((offer) => {
-      const isHighlighted = activeOfferId === offer.id;
-
-      const marker = L.marker([offer.location.latitude, offer.location.longitude], {
-        icon: createCustomMarkerIcon(isHighlighted ? 'orange' : '#007AFF'),
-      }).addTo(mapRef.current!);
+      const marker = L.marker(
+        [offer.location.latitude, offer.location.longitude],
+        {
+          icon: createCustomIcon(activeOfferId === offer.id),
+        }
+      ).addTo(mapRef.current!);
 
       markersRef.current[offer.id] = marker;
     });
 
     return () => {
-
-      Object.values(markersRef.current).forEach(marker => marker.removeFrom(mapRef.current!));
+      Object.values(markersRef.current).forEach((marker) =>
+        marker.removeFrom(mapRef.current!)
+      );
     };
   }, [offers, activeOfferId]);
 
