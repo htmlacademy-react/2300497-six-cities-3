@@ -85,7 +85,7 @@ function CitiesCard({
               <div>{offer.title}</div>
             </h2>
           </Link>
-          <p className="place-card__type">{offer.type}</p>
+          <p className="place-card__type">{offer.type.charAt(0).toUpperCase() + offer.type.slice(1)}</p>
         </div>
       </article>
     </div>
