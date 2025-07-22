@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadOfferById, loadCommentsById } from '../../store/reducer';
 import { useParams } from 'react-router-dom';
@@ -24,6 +24,7 @@ function Offer() {
   const comments = useSelector((state: RootState) => state.comments);
   const isAuthorized = useSelector(selectIsAuthorized);
   const navigate = useNavigate();
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
 
   const handleFavoriteClick = () => {
     if (!isAuthorized) {
@@ -54,14 +55,6 @@ function Offer() {
   if (!currentOffer) {
     return <NotFoundScreen />;
   }
-
-  const filtered = nearby.filter(
-    (item) =>
-      item.city.name === currentOffer?.city?.name &&
-      item.id !== currentOffer?.id
-  );
-
-  console.log('filtered:', filtered);
 
   return (
     <div className="page">
@@ -112,7 +105,8 @@ function Offer() {
                 <div className="offer__stars rating__stars">
                   <span
                     style={{ width: `${(currentOffer.rating / 5) * 100}%` }}
-                  ></span>
+                  >
+                  </span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
@@ -206,14 +200,14 @@ function Offer() {
           >
             <Map
               city={currentOffer.city}
-              offers={nearby
+              offers={[currentOffer, ...nearby
                 .filter(
                   (item) =>
                     item.city.name === currentOffer.city.name &&
                     item.id !== currentOffer.id
                 )
-                .slice(0, 3)}
-              activeOfferId={currentOffer.id}
+                .slice(0, 3)]}
+              activeOfferId={activeOfferId}
             />
           </section>
         </section>
@@ -231,6 +225,7 @@ function Offer() {
                       item.id !== currentOffer.id
                   )
                   .slice(0, 3)}
+                onActiveCardChange={setActiveOfferId}
               />
             </div>
           </section>

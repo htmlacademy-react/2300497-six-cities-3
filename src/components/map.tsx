@@ -15,11 +15,10 @@ export type MapProps = {
   activeOfferId?: string | null;
 };
 
-function createCustomIcon(isActive = false) {
+function createCustomIcon(isActive: boolean) {
   return new L.DivIcon({
     className: 'custom-div-icon',
-    html: `<img src="img/${
-      isActive ? 'pin-active.svg' : 'pin.svg'
+    html: `<img src="img/${isActive ? 'pin-active.svg' : 'pin.svg'
     }" alt="pin" />`,
     iconSize: [24, 30],
     iconAnchor: [12, 30],
@@ -29,7 +28,7 @@ function createCustomIcon(isActive = false) {
 function Map({ city, offers, activeOfferId }: MapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<{ [key: number]: L.Marker }>({});
+  const markersRef = useRef<{ [key: string]: L.Marker }>({});
 
   useEffect(() => {
     if (mapContainerRef.current && !mapRef.current) {
@@ -62,10 +61,11 @@ function Map({ city, offers, activeOfferId }: MapProps) {
     }
 
     offers.forEach((offer) => {
+      const isActive = activeOfferId === offer.id;
       const marker = L.marker(
         [offer.location.latitude, offer.location.longitude],
         {
-          icon: createCustomIcon(activeOfferId === offer.id),
+          icon: createCustomIcon(isActive),
         }
       ).addTo(mapRef.current!);
 
