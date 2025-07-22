@@ -92,10 +92,11 @@ function Offer() {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{currentOffer.title}</h1>
                 <button
-                  className={`offer__bookmark-button button ${currentOffer.isFavorite
-                    ? 'offer__bookmark-button--active'
-                    : ''
-                    }`}
+                  className={`offer__bookmark-button button ${
+                    currentOffer.isFavorite
+                      ? 'offer__bookmark-button--active'
+                      : ''
+                  }`}
                   type="button"
                   onClick={handleFavoriteClick}
                 >
@@ -153,10 +154,11 @@ function Offer() {
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div
-                    className={`offer__avatar-wrapper user__avatar-wrapper ${currentOffer.host?.isPro
-                      ? 'offer__avatar-wrapper--pro'
-                      : ''
-                      }`}
+                    className={`offer__avatar-wrapper user__avatar-wrapper ${
+                      currentOffer.host?.isPro
+                        ? 'offer__avatar-wrapper--pro'
+                        : ''
+                    }`}
                   >
                     <img
                       className="offer__avatar user__avatar"
@@ -220,15 +222,17 @@ function Offer() {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <OffersList
-              offersType={nearby
-                .filter(
-                  (item) =>
-                    item.city.name === currentOffer.city.name &&
-                    item.id !== currentOffer.id
-                )
-                .slice(0, 3)}
-            />
+            <div className="near-places__list places__list">
+              <OffersList
+                offersType={nearby
+                  .filter(
+                    (item) =>
+                      item.city.name === currentOffer.city.name &&
+                      item.id !== currentOffer.id
+                  )
+                  .slice(0, 3)}
+              />
+            </div>
           </section>
         </div>
       </main>
