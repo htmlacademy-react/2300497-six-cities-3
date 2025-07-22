@@ -18,7 +18,8 @@ export type MapProps = {
 function createCustomIcon(isActive: boolean) {
   return new L.DivIcon({
     className: 'custom-div-icon',
-    html: `<img src="img/${isActive ? 'pin-active.svg' : 'pin.svg'
+    html: `<img src="img/${
+      isActive ? 'pin-active.svg' : 'pin.svg'
     }" alt="pin" />`,
     iconSize: [24, 30],
     iconAnchor: [12, 30],
@@ -32,14 +33,9 @@ function Map({ city, offers, activeOfferId }: MapProps) {
 
   useEffect(() => {
     if (mapContainerRef.current && !mapRef.current) {
-      mapRef.current = L.map(mapContainerRef.current).setView(
-        [city.location.latitude, city.location.longitude],
-        city.location.zoom
-      );
-
+      mapRef.current = L.map(mapContainerRef.current);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        attribution: '&copy; OpenStreetMap contributors',
       }).addTo(mapRef.current);
     }
   }, []);
@@ -54,8 +50,10 @@ function Map({ city, offers, activeOfferId }: MapProps) {
   }, [city]);
 
   useEffect(() => {
-    if (markersRef.current) {
-      Object.values(markersRef.current).forEach((marker) =>
+    const currentMarkers = markersRef.current;
+
+    if (currentMarkers) {
+      Object.values(currentMarkers).forEach((marker) =>
         marker.removeFrom(mapRef.current!)
       );
     }
@@ -69,11 +67,12 @@ function Map({ city, offers, activeOfferId }: MapProps) {
         }
       ).addTo(mapRef.current!);
 
-      markersRef.current[offer.id] = marker;
+      currentMarkers[offer.id] = marker;
     });
 
     return () => {
-      Object.values(markersRef.current).forEach((marker) =>
+
+      Object.values(currentMarkers).forEach((marker) =>
         marker.removeFrom(mapRef.current!)
       );
     };

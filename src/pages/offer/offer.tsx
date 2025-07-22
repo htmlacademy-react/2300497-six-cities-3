@@ -64,8 +64,8 @@ function Offer() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {currentOffer.images.map((image, index) => (
-                <div className="offer__image-wrapper" key={index}>
+              {currentOffer.images.map((image) => (
+                <div className="offer__image-wrapper" key={image}>
                   <img
                     src={image}
                     alt={`Photo of ${currentOffer.title}`}
@@ -170,8 +170,8 @@ function Offer() {
                   )}
                 </div>
                 <div className="offer__description">
-                  {currentOffer.description?.split('\n').map((paragraph, i) => (
-                    <p key={i} className="offer__text">
+                  {currentOffer.description?.split('\n').map((paragraph) => (
+                    <p key={paragraph} className="offer__text">
                       {paragraph}
                     </p>
                   ))}

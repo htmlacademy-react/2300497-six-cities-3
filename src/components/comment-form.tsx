@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { sendComment } from '../store/reducer';
 import { useParams } from 'react-router-dom';
-
+import { AppDispatch } from '../store';
 
 function ReviewsForm() {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
 
   const handleRatingChange = (value: number) => {
@@ -23,15 +23,11 @@ function ReviewsForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!id || isSubmitDisabled) return;
+    if (!id || isSubmitDisabled) {
+      return;
+    }
 
-    dispatch(
-      sendComment({
-        offerId: id,
-        comment: reviewText,
-        rating,
-      })
-    );
+    dispatch(sendComment({offerId: id, comment: reviewText, rating,}));
 
     setReviewText('');
     setRating(0);
