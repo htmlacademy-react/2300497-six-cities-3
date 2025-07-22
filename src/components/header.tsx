@@ -56,11 +56,10 @@ function Header() {
                   </li>
                 </>
               ) : (
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="/login">
-                    Sign in
-                  </a>
-                </li>
+                <Link to="/login" className="header__nav-link header__nav-link--profile">
+                  <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                  <span className="header__login">Sign in</span>
+                </Link>
               )}
             </ul>
           </nav>
