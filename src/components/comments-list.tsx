@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { selectComments } from '../store/reducer';
+import { selectComments } from '../store/thunks/comment-thunks';
 import Comment from './comment';
 
 function CommentList() {

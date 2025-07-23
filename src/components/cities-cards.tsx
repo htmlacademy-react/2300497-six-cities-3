@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import { AppDispatch } from '../store';
 import { selectIsAuthorized } from '../store/selectors';
-import { toggleFavorite } from '../store/reducer';
+import { toggleFavorite } from '../store/thunks/offer-thunks';
 
 type CitiesCardProps = {
   offer: OfferTypes;

@@ -1,30 +1,18 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  createSelector,
-  PayloadAction
-} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
-import { api } from '../api';
 import { AuthorizationStatus } from '../const/const';
 import { saveToken } from '../services/token';
-import { clearToken } from '../services/token';
-import { AxiosInstance } from 'axios';
 import { ReviewTypes } from '../mocks/offer';
-import { AppDispatch, RootState } from '.';
-
-export type SortType =
-  | 'Popular'
-  | 'Price: low to high'
-  | 'Price: high to low'
-  | 'Top rated first';
-
-type User = {
-  name: string;
-  avatarUrl: string;
-  email: string;
-  token: string;
-};
+import { SortType, User } from './types/types';
+import { login, checkAuth, logout } from './thunks/auth-thunks';
+import {
+  loadOffersFromServer,
+  loadOfferById,
+  loadFavoritesFromServer,
+  toggleFavorite,
+} from './thunks/offer-thunks';
+import { sendComment, loadCommentsById } from './thunks/comment-thunks';
+import { api } from '../api';
 
 export type OffersState = {
   city: string;
@@ -42,7 +30,7 @@ export type OffersState = {
   comments: ReviewTypes[];
 };
 
-const initialState: OffersState = {
+export const initialState: OffersState = {
   city: 'Paris',
   offers: [],
   allOffers: [],
@@ -57,97 +45,6 @@ const initialState: OffersState = {
   favoriteOffers: [],
   comments: [],
 };
-
-export const toggleFavorite = createAsyncThunk<
-  OfferTypes,
-  { offerId: string; status: 0 | 1 },
-  { extra: AxiosInstance }
->('offers/toggleFavorite', async ({ offerId, status }, { extra: axiosApi }) => {
-  const response = await axiosApi.post<OfferTypes>(`/favorite/${offerId}/${status}`);
-  return response.data;
-});
-
-export const loadOffersFromServer = createAsyncThunk<OfferTypes[]>(
-  'offers/loadOffersFromServer',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get<OfferTypes[]>('/offers');
-      return response.data;
-    } catch (error) {
-      return rejectWithValue('Ошибка загрузки данных');
-    }
-  }
-);
-
-export const loadFavoritesFromServer = createAsyncThunk<OfferTypes[]>(
-  'offers/loadFavoritesFromServer',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get<OfferTypes[]>('/favorite');
-      return response.data;
-    } catch (error) {
-      return rejectWithValue('Ошибка загрузки избранного');
-    }
-  }
-);
-
-export const loadCommentsById = createAsyncThunk<
-  ReviewTypes[],
-  string,
-  { extra: AxiosInstance }
->('offers/loadCommentsById', async (offerId, { extra: axiosApi }) => {
-  try {
-    const response = await axiosApi.get<ReviewTypes[]>(`/comments/${offerId}`);
-    return response.data;
-  } catch (error) {
-    throw new Error('Не удалось загрузить комментарии');
-  }
-});
-
-export const sendComment = createAsyncThunk<
-  ReviewTypes,
-  { offerId: string; comment: string; rating: number },
-  { extra: AxiosInstance }
->(
-  'offers/sendComment',
-  async (
-    { offerId, comment, rating },
-    { extra: axiosApi, rejectWithValue, dispatch }
-  ) => {
-    try {
-      const response = await axiosApi.post<ReviewTypes>(`/comments/${offerId}`, {
-        comment,
-        rating,
-      });
-
-      dispatch(loadCommentsById(offerId));
-
-      return response.data;
-    } catch (error) {
-      return rejectWithValue('Ошибка при отправке комментария');
-    }
-  }
-);
-
-export const loadOfferById = createAsyncThunk<
-  { offer: OfferTypes; nearby: OfferTypes[] },
-  string,
-  { extra: AxiosInstance }
->('offers/loadOfferById', async (offerId, { extra: axiosApi }) => {
-  try {
-    const offerResponse = await axiosApi.get<OfferTypes>(`/offers/${offerId}`);
-    const nearbyResponse = await axiosApi.get<OfferTypes[]>(
-      `/offers/${offerId}/nearby`
-    );
-
-    return {
-      offer: offerResponse.data,
-      nearby: nearbyResponse.data,
-    };
-  } catch (error) {
-    throw new Error('Предложение не найдено');
-  }
-});
 
 const offersSlice = createSlice({
   name: 'offers',
@@ -174,6 +71,26 @@ const offersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(login.fulfilled, (state, action) => {
+        const { user, token } = action.payload;
+        state.user = user;
+        state.authorizationStatus = AuthorizationStatus.Auth;
+        saveToken(token);
+        api.defaults.headers.common['X-Token'] = token;
+        localStorage.setItem('user', JSON.stringify(user));
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.authorizationStatus = AuthorizationStatus.Auth;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.authorizationStatus = AuthorizationStatus.NoAuth;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.authorizationStatus = AuthorizationStatus.NoAuth;
+        state.favoriteOffers = [];
+      })
       .addCase(toggleFavorite.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
 
@@ -254,6 +171,9 @@ const offersSlice = createSlice({
       .addCase(loadCommentsById.rejected, (state) => {
         state.comments = [];
         state.isLoading = false;
+      })
+      .addCase(sendComment.fulfilled, (state, action) => {
+        state.comments.unshift(action.payload);
       });
   },
 });
@@ -265,74 +185,5 @@ export const {
   setIsCheckingAuth,
   setUser,
 } = offersSlice.actions;
-
-
-export const checkAuth = createAsyncThunk<
-  User,
-  void,
-  { dispatch: AppDispatch; extra: AxiosInstance }
->('user/checkAuth', async (_, { dispatch }) => {
-  try {
-    const response = await api.get<User>('/login');
-    dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
-    dispatch(setUser(response.data));
-    return response.data;
-  } catch (error) {
-    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-    throw error;
-  } finally {
-    dispatch(setIsCheckingAuth(false));
-  }
-});
-
-export const login = createAsyncThunk(
-  'user/login',
-  async (
-    { email, password }: { email: string; password: string },
-    { dispatch, rejectWithValue }
-  ) => {
-    try {
-      const response = await api.post<{ token: string; user: User }>(
-        '/login',
-        { email, password }
-      );
-
-      const token = response.data.token;
-      const user = response.data.user;
-
-      if (token) {
-        saveToken(token);
-        api.defaults.headers.common['X-Token'] = token;
-        dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
-        dispatch(setUser(user));
-      }
-
-      return { token, user };
-    } catch (error) {
-      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-      return rejectWithValue('Неверный логин или пароль');
-    }
-  }
-);
-
-export const logout = createAsyncThunk(
-  'user/logout',
-  async (_, { dispatch }) => {
-    try {
-      await api.delete('/logout');
-    } catch (error) {
-      throw new Error('Ошибка при выходе');
-    } finally {
-      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-      dispatch(setUser(null));
-      clearToken();
-    }
-  }
-);
-
-export const selectComments = createSelector(
-  [(state: RootState) => state.comments],
-  (comments) => comments || []
-);
 
 export default offersSlice.reducer;

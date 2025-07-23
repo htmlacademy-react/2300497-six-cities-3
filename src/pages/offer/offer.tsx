@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadOfferById, loadCommentsById } from '../../store/reducer';
+import { loadOfferById } from '../../store/thunks/offer-thunks';
+import { loadCommentsById } from '../../store/thunks/comment-thunks';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
@@ -15,7 +16,7 @@ import { RootState } from '../../store';
 import ReviewsForm from '../../components/comment-form';
 import { selectIsAuthorized } from '../../store/selectors';
 import { useNavigate } from 'react-router-dom';
-import { toggleFavorite } from '../../store/reducer';
+import { toggleFavorite } from '../../store/thunks/offer-thunks';
 
 function Offer() {
   const { id } = useParams<{ id: string }>();

@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { State } from '../types/state';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logout } from '../store/reducer';
+import { logout } from '../store/thunks/auth-thunks';
 import { selectFavoriteOffers } from '../store/selectors';
 import { AppDispatch } from '../store';
 
@@ -44,7 +44,7 @@ function Header() {
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                       <span className="header__user-name user__name">
-                        {user?.email || 'User'}
+                        {user?.email}
                       </span>
                       <span className="header__favorite-count">{count}</span>
                     </Link>

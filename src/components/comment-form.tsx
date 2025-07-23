@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { sendComment } from '../store/reducer';
+import { sendComment } from '../store/thunks/comment-thunks';
 import { useParams } from 'react-router-dom';
 import { AppDispatch } from '../store';
 

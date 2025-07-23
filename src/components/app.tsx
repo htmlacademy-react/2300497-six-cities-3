@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppRoute } from '../const/const';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { checkAuth } from '../store/reducer';
+import { checkAuth } from '../store/thunks/auth-thunks';
 import { State } from '../types/state';
 import PrivateRoute from '../components/private-route';
 import MainPage from '../pages/main-page/main-page';

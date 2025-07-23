@@ -5,11 +5,9 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 import { State } from '../../types/state';
-import { loadFavoritesFromServer } from '../../store/reducer';
+import { loadFavoritesFromServer } from '../../store/thunks/offer-thunks';
 import { AppDispatch } from '../../store';
 import { selectFavoriteOffers } from '../../store/selectors';
-
-
 
 function Favorites() {
   const status = useSelector((state: State) => state.authorizationStatus);
@@ -17,7 +15,6 @@ function Favorites() {
   const favoriteOffers = useSelector(selectFavoriteOffers);
 
   console.log('favoriteOffers:', favoriteOffers);
-
 
   useEffect(() => {
     dispatch(loadFavoritesFromServer());
@@ -42,8 +39,8 @@ function Favorites() {
   );
 
   if (!favoriteOffers || favoriteOffers.length === 0) {
-  return <p>Нет избранных предложений</p>;
-}
+    return <p>Нет избранных предложений</p>;
+  }
 
   return (
     <div className="page">
@@ -64,9 +61,13 @@ function Favorites() {
                   </div>
                   <div className="favorites__places">
                     {cityOffers.map((offer) => (
-                      <CitiesCard key={offer.id} offer={offer} isActive={false}
-                        onMouseEnter={() => { }}
-                        onMouseLeave={() => { }} />
+                      <CitiesCard
+                        key={offer.id}
+                        offer={offer}
+                        isActive={false}
+                        onMouseEnter={() => {}}
+                        onMouseLeave={() => {}}
+                      />
                     ))}
                   </div>
                 </li>

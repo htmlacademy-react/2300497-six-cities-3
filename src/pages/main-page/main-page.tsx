@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadOffersFromServer } from '../../store/reducer';
+import { loadOffersFromServer } from '../../store/thunks/offer-thunks';
 import { State } from '../../types/state';
 import OffersList from '../../components/OffersList';
 import Map from '../../components/map';

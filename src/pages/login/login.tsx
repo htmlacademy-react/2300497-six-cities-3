@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { login } from '../../store/reducer';
+import { login } from '../../store/thunks/auth-thunks';
 import { State } from '../../types/state';
 import { Link } from 'react-router-dom';
 import { changeCity } from '../../store/reducer';
