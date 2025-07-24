@@ -5,7 +5,8 @@ import { useParams } from 'react-router-dom';
 import { AppDispatch } from '../store';
 
 function ReviewsForm() {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState<number | null>(null);
+  const [comment, setComment] = useState('');
   const [reviewText, setReviewText] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
@@ -27,7 +28,14 @@ function ReviewsForm() {
       return;
     }
 
-    dispatch(sendComment({offerId: id, comment: reviewText, rating,}));
+     dispatch(sendComment({ offerId: id, comment: reviewText, rating: rating! }))
+    .unwrap()
+    .then(() => {
+      setComment('');
+      setRating(null);
+    })
+    .catch(() => {
+    });
 
     setReviewText('');
     setRating(0);
@@ -135,6 +143,7 @@ function ReviewsForm() {
         </label>
       </div>
       <textarea
+        maxLength={300}
         className="reviews__textarea form__textarea"
         id="review"
         name="review"

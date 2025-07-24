@@ -1,9 +1,24 @@
 import { useSelector } from 'react-redux';
-import { selectComments } from '../store/thunks/comment-thunks';
 import Comment from './comment';
+import { selectRecentComments } from '../store/selectors';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store';
+import { loadCommentsById } from '../store/thunks/comment-thunks';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+
 
 function CommentList() {
-  const comments = useSelector(selectComments);
+  const { id } = useParams<{ id: string }>();
+  const comments = useSelector(selectRecentComments);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (id) {
+      dispatch(loadCommentsById(id));
+    }
+  }, [dispatch, id]);
+
 
   return (
     <ul className="reviews__list">

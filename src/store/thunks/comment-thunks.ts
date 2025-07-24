@@ -45,7 +45,3 @@ export const sendComment = createAsyncThunk<
   }
 );
 
-export const selectComments = createSelector(
-  [(state: RootState) => state.comments],
-  (comments) => comments || []
-);

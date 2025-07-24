@@ -10,3 +10,11 @@ export type User = {
   email: string;
   token: string;
 };
+
+export type LoginResponse = {
+  token: string;
+  name: string;
+  email: string;
+  avatarUrl: string;
+  isPro: boolean;
+};

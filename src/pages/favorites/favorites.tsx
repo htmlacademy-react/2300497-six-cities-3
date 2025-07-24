@@ -9,6 +9,7 @@ import { loadFavoritesFromServer } from '../../store/thunks/offer-thunks';
 import { AppDispatch } from '../../store';
 import { selectFavoriteOffers } from '../../store/selectors';
 import { AuthorizationStatus } from '../../const/const';
+import FavoritesEmpty from '../favorites-empty/favorites';
 
 function Favorites() {
   const status = useSelector((state: State) => state.authorizationStatus);
@@ -38,7 +39,7 @@ function Favorites() {
   );
 
   if (!favoriteOffers || favoriteOffers.length === 0) {
-    return <p>Нет избранных предложений</p>;
+    return <FavoritesEmpty/>
   }
 
   return (

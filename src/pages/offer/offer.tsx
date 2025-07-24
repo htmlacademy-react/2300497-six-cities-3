@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadOfferById } from '../../store/thunks/offer-thunks';
-import { loadCommentsById } from '../../store/thunks/comment-thunks';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
@@ -21,11 +20,15 @@ import { toggleFavorite } from '../../store/thunks/offer-thunks';
 function Offer() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { currentOffer, nearby, isLoading } = useSelector(getOfferWithNearby);
+  const { nearby, isLoading } = useSelector(getOfferWithNearby);
   const comments = useSelector((state: RootState) => state.comments);
   const isAuthorized = useSelector(selectIsAuthorized);
   const navigate = useNavigate();
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const { offerPageStatus, currentOffer } = useSelector((state: RootState) => ({
+    offerPageStatus: state.offerPageStatus,
+    currentOffer: state.currentOffer,
+  }));
 
   const handleFavoriteClick = () => {
     if (!isAuthorized) {
@@ -45,17 +48,11 @@ function Offer() {
   useEffect(() => {
     if (id) {
       dispatch(loadOfferById(id));
-      dispatch(loadCommentsById(id));
     }
   }, [dispatch, id]);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
-  if (!currentOffer) {
-    return <NotFoundScreen />;
-  }
+  if (offerPageStatus === 'loading') return <Spinner />;
+  if (offerPageStatus === 'failed' || !currentOffer) return <NotFoundScreen />;
 
   return (
     <div className="page">
@@ -65,7 +62,7 @@ function Offer() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {currentOffer.images.map((image) => (
+              {currentOffer.images.slice(0, 6).map((image) => (
                 <div className="offer__image-wrapper" key={image}>
                   <img
                     src={image}
@@ -86,13 +83,13 @@ function Offer() {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{currentOffer.title}</h1>
                 <button
-                  className={`offer__bookmark-button button ${
-                    currentOffer.isFavorite
-                      ? 'offer__bookmark-button--active'
-                      : ''
-                  }`}
+                  className={`offer__bookmark-button button ${currentOffer.isFavorite
+                    ? 'offer__bookmark-button--active'
+                    : ''
+                    }`}
                   type="button"
                   onClick={handleFavoriteClick}
+                  disabled={isLoading}
                 >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
@@ -149,11 +146,10 @@ function Offer() {
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div
-                    className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      currentOffer.host?.isPro
-                        ? 'offer__avatar-wrapper--pro'
-                        : ''
-                    }`}
+                    className={`offer__avatar-wrapper user__avatar-wrapper ${currentOffer.host?.isPro
+                      ? 'offer__avatar-wrapper--pro'
+                      : ''
+                      }`}
                   >
                     <img
                       className="offer__avatar user__avatar"

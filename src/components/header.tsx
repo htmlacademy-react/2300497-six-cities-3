@@ -1,14 +1,13 @@
 import { useSelector } from 'react-redux';
-import { State } from '../types/state';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/thunks/auth-thunks';
 import { selectFavoriteOffers } from '../store/selectors';
-import { AppDispatch } from '../store';
+import { AppDispatch, RootState } from '../store';
 
 function Header() {
-  const status = useSelector((state: State) => state.authorizationStatus);
-  const user = useSelector((state: State) => state.user);
+  const status = useSelector((state: RootState) => state.authorizationStatus);
+  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const favoriteOffers = useSelector(selectFavoriteOffers);
   const count = favoriteOffers.length;

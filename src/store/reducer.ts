@@ -28,7 +28,10 @@ export type OffersState = {
   nearbyOffers: OfferTypes[];
   favoriteOffers: OfferTypes[];
   comments: ReviewTypes[];
+  offerPageStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
 };
+
+
 
 export const initialState: OffersState = {
   city: 'Paris',
@@ -44,6 +47,7 @@ export const initialState: OffersState = {
   nearbyOffers: [],
   favoriteOffers: [],
   comments: [],
+  offerPageStatus: 'idle',
 };
 
 const offersSlice = createSlice({
@@ -120,15 +124,18 @@ const offersSlice = createSlice({
         }
       })
       .addCase(loadOfferById.pending, (state) => {
+        state.offerPageStatus = 'loading';
         state.isLoading = true;
         state.currentOffer = null;
       })
       .addCase(loadOfferById.fulfilled, (state, action) => {
+        state.offerPageStatus = 'succeeded';
         state.isLoading = false;
         state.currentOffer = action.payload.offer;
         state.nearbyOffers = action.payload.nearby;
       })
       .addCase(loadOfferById.rejected, (state) => {
+        state.offerPageStatus = 'failed';
         state.isLoading = false;
         state.currentOffer = null;
       })
@@ -165,7 +172,8 @@ const offersSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loadCommentsById.fulfilled, (state, action) => {
-        state.comments = action.payload;
+        state.comments = action.payload.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         state.isLoading = false;
       })
       .addCase(loadCommentsById.rejected, (state) => {

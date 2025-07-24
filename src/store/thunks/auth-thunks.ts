@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../api';
 import { saveToken } from '../../services/token';
-import { User } from '../types/types';
+import { User, LoginResponse } from '../types/types';
 import { AxiosInstance } from 'axios';
 import { AppDispatch } from '..';
 import { setAuthorizationStatus, setUser, setIsCheckingAuth } from '../reducer';
@@ -16,13 +16,11 @@ export const login = createAsyncThunk(
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const response = await api.post<{ token: string; user: User }>('/login', {
-        email,
-        password,
-      });
+  const response = await api.post<LoginResponse>('/login', { email, password });
 
-      const token = response.data.token;
-      const user = response.data.user;
+      const { token, name, email: userEmail, avatarUrl } = response.data;
+
+      const user = { name, email: userEmail, avatarUrl, token };
 
       if (token) {
         saveToken(token);
