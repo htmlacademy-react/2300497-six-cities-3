@@ -7,11 +7,13 @@ import { Link } from 'react-router-dom';
 import { changeCity } from '../../store/reducer';
 import { randomCity } from '../../components/random-city-start';
 import { cities } from '../../components/city-list';
+import { AppDispatch } from '../../store';
+import { AuthorizationStatus } from '../../const/const';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const status = useSelector((state: State) => state.authorizationStatus);
   const [currentCity, setCurrentCity] = useState<string>('Paris');
   const navigate = useNavigate();
@@ -23,7 +25,6 @@ function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted', { email, password });
     dispatch(login({ email, password }));
   };
 
@@ -32,7 +33,7 @@ function Login() {
     navigate('/');
   };
 
-  if (status === 'AUTH') {
+  if (status === AuthorizationStatus.Auth) {
     return <Navigate to="/" />;
   }
 

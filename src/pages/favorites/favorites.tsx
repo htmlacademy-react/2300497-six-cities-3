@@ -8,19 +8,18 @@ import { State } from '../../types/state';
 import { loadFavoritesFromServer } from '../../store/thunks/offer-thunks';
 import { AppDispatch } from '../../store';
 import { selectFavoriteOffers } from '../../store/selectors';
+import { AuthorizationStatus } from '../../const/const';
 
 function Favorites() {
   const status = useSelector((state: State) => state.authorizationStatus);
   const dispatch = useDispatch<AppDispatch>();
   const favoriteOffers = useSelector(selectFavoriteOffers);
 
-  console.log('favoriteOffers:', favoriteOffers);
-
   useEffect(() => {
     dispatch(loadFavoritesFromServer());
   }, [dispatch]);
 
-  if (status !== 'AUTH') {
+  if (status !== AuthorizationStatus.Auth) {
     return <Navigate to="/login" />;
   }
 
