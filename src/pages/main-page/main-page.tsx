@@ -9,11 +9,12 @@ import SortOptions from '../../components/sort-options';
 import Spinner from '../../components/spinner';
 import Header from '../../components/header';
 import { AppDispatch } from '../../store';
+import MainEmpty from '../main-empty/main-empty';
 
 function MainPage() {
   const dispatch = useDispatch<AppDispatch>();
   const city = useSelector((state: State) => state.city);
-  const offers = useSelector((state: State) => state.offers);
+  const allOffers = useSelector((state: State) => state.allOffers);
   const sortType = useSelector((state: State) => state.sortType);
   const isLoading = useSelector((state: State) => state.isLoading);
 
@@ -27,7 +28,9 @@ function MainPage() {
     return <Spinner />;
   }
 
-  const sortedOffers = [...offers];
+  const offersInCurrentCity = allOffers.filter((offer) => offer.city.name === city);
+
+  const sortedOffers = [...offersInCurrentCity];
 
   switch (sortType) {
     case 'Price: low to high':
@@ -41,6 +44,10 @@ function MainPage() {
       break;
     default:
       break;
+  }
+
+  if (sortedOffers.length === 0) {
+    return <MainEmpty city={city} />;
   }
 
   return (
@@ -67,7 +74,7 @@ function MainPage() {
             <div className="cities__right-section">
               <Map
                 city={{
-                  location: offers[0]?.city.location || {
+                  location: sortedOffers[0]?.city.location || {
                     latitude: 52.3909553943508,
                     longitude: 4.85309666406198,
                     zoom: 12,
