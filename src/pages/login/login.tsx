@@ -1,29 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { login } from '../../store/reducer';
-import { State } from '../../types/state';
+import { login } from '../../store/thunks/auth-thunks';
 import { Link } from 'react-router-dom';
 import { changeCity } from '../../store/reducer';
 import { randomCity } from '../../components/random-city-start';
 import { cities } from '../../components/city-list';
+import { AppDispatch, RootState } from '../../store';
+import { AuthorizationStatus } from '../../const/const';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
-  const status = useSelector((state: State) => state.authorizationStatus);
+  const dispatch = useDispatch<AppDispatch>();
+  const status = useSelector((state: RootState) => state.authorizationStatus);
   const [currentCity, setCurrentCity] = useState<string>('Paris');
   const navigate = useNavigate();
+  const [errors, setErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const city = randomCity(cities);
     setCurrentCity(city);
   }, []);
 
+  const validate = (password: string) => {
+    const errors = [];
+    if (password.length < 6) errors.push('Пароль должен быть не менее 6 символов');
+    if (!/\d/.test(password)) errors.push('Пароль должен содержать цифру');
+    if (!/[a-zA-Z]/.test(password)) errors.push('Пароль должен содержать букву');
+    return errors;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted', { email, password });
+    const newErrors = validate(password);
+    if (newErrors.length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors([]);
     dispatch(login({ email, password }));
   };
 
@@ -32,7 +47,7 @@ function Login() {
     navigate('/');
   };
 
-  if (status === 'AUTH') {
+  if (status === AuthorizationStatus.Auth) {
     return <Navigate to="/" />;
   }
 

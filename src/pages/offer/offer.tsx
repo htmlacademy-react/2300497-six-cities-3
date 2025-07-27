@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadOfferById, loadCommentsById } from '../../store/reducer';
+import { loadOfferById } from '../../store/thunks/offer-thunks';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
@@ -15,15 +15,20 @@ import { RootState } from '../../store';
 import ReviewsForm from '../../components/comment-form';
 import { selectIsAuthorized } from '../../store/selectors';
 import { useNavigate } from 'react-router-dom';
-import { toggleFavorite } from '../../store/reducer';
+import { toggleFavorite } from '../../store/thunks/offer-thunks';
 
 function Offer() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { currentOffer, nearby, isLoading } = useSelector(getOfferWithNearby);
+  const { nearby, isLoading } = useSelector(getOfferWithNearby);
   const comments = useSelector((state: RootState) => state.comments);
   const isAuthorized = useSelector(selectIsAuthorized);
   const navigate = useNavigate();
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const { offerPageStatus, currentOffer } = useSelector((state: RootState) => ({
+    offerPageStatus: state.offerPageStatus,
+    currentOffer: state.currentOffer,
+  }));
 
   const handleFavoriteClick = () => {
     if (!isAuthorized) {
@@ -43,25 +48,11 @@ function Offer() {
   useEffect(() => {
     if (id) {
       dispatch(loadOfferById(id));
-      dispatch(loadCommentsById(id));
     }
   }, [dispatch, id]);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
-  if (!currentOffer) {
-    return <NotFoundScreen />;
-  }
-
-  const filtered = nearby.filter(
-    (item) =>
-      item.city.name === currentOffer?.city?.name &&
-      item.id !== currentOffer?.id
-  );
-
-  console.log('filtered:', filtered);
+  if (offerPageStatus === 'loading') return <Spinner />;
+  if (offerPageStatus === 'failed' || !currentOffer) return <NotFoundScreen />;
 
   return (
     <div className="page">
@@ -71,8 +62,8 @@ function Offer() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {currentOffer.images.map((image, index) => (
-                <div className="offer__image-wrapper" key={index}>
+              {currentOffer.images.slice(0, 6).map((image) => (
+                <div className="offer__image-wrapper" key={image}>
                   <img
                     src={image}
                     alt={`Photo of ${currentOffer.title}`}
@@ -98,6 +89,7 @@ function Offer() {
                     }`}
                   type="button"
                   onClick={handleFavoriteClick}
+                  disabled={isLoading}
                 >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
@@ -111,7 +103,8 @@ function Offer() {
                 <div className="offer__stars rating__stars">
                   <span
                     style={{ width: `${(currentOffer.rating / 5) * 100}%` }}
-                  ></span>
+                  >
+                  </span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
@@ -174,14 +167,14 @@ function Offer() {
                   )}
                 </div>
                 <div className="offer__description">
-                  {currentOffer.description?.split('\n').map((paragraph, i) => (
-                    <p key={i} className="offer__text">
+                  {currentOffer.description?.split('\n').map((paragraph) => (
+                    <p key={paragraph} className="offer__text">
                       {paragraph}
                     </p>
                   ))}
                 </div>
               </div>
-              <section className="offer__section offer__section--reviews">
+              <section className="offer__reviews reviews">
                 <h2 className="reviews__title">
                   Reviews &middot;{' '}
                   <span className="reviews__amount">{comments?.length}</span>
@@ -204,14 +197,14 @@ function Offer() {
           >
             <Map
               city={currentOffer.city}
-              offers={nearby
+              offers={[currentOffer, ...nearby
                 .filter(
                   (item) =>
                     item.city.name === currentOffer.city.name &&
                     item.id !== currentOffer.id
                 )
-                .slice(0, 3)}
-              activeOfferId={currentOffer.id}
+                .slice(0, 3)]}
+              activeOfferId={activeOfferId}
             />
           </section>
         </section>
@@ -220,15 +213,18 @@ function Offer() {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <OffersList
-              offersType={nearby
-                .filter(
-                  (item) =>
-                    item.city.name === currentOffer.city.name &&
-                    item.id !== currentOffer.id
-                )
-                .slice(0, 3)}
-            />
+            <div className="near-places__list places__list">
+              <OffersList
+                offersType={nearby
+                  .filter(
+                    (item) =>
+                      item.city.name === currentOffer.city.name &&
+                      item.id !== currentOffer.id
+                  )
+                  .slice(0, 3)}
+                onActiveCardChange={setActiveOfferId}
+              />
+            </div>
           </section>
         </div>
       </main>

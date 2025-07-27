@@ -1,3 +1,3 @@
 import {createAction} from '@reduxjs/toolkit';
 
-export const action = createAction();
+export const action = createAction('actionType');

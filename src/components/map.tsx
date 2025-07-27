@@ -15,69 +15,27 @@ export type MapProps = {
   activeOfferId?: string | null;
 };
 
-function createCustomMarkerIcon(color = '#007AFF') {
+function createCustomIcon(isActive: boolean) {
   return new L.DivIcon({
     className: 'custom-div-icon',
-    html: `
-      <div style="
-        position: relative;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
-        <div style="
-          background-color: ${color};
-          border-radius: 50%;
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "></div>
-
-        <div style="
-          background-color: white;
-          border-radius: 50%;
-          width: 8px;
-          height: 8px;
-          position: absolute;
-        "></div>
-
-        <div style="
-          position: absolute;
-          bottom: -6px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-top: 6px solid ${color};
-        "></div>
-      </div>
-    `,
+    html: `<img src="img/${
+      isActive ? 'pin-active.svg' : 'pin.svg'
+    }" alt="pin" />`,
     iconSize: [24, 30],
-    iconAnchor: [12, 30]
+    iconAnchor: [12, 30],
   });
 }
 
 function Map({ city, offers, activeOfferId }: MapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<{ [key: number]: L.Marker }>({});
+  const markersRef = useRef<{ [key: string]: L.Marker }>({});
 
   useEffect(() => {
     if (mapContainerRef.current && !mapRef.current) {
-      mapRef.current = L.map(mapContainerRef.current).setView(
-        [city.location.latitude, city.location.longitude],
-        city.location.zoom
-      );
-
+      mapRef.current = L.map(mapContainerRef.current);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        attribution: '&copy; OpenStreetMap contributors',
       }).addTo(mapRef.current);
     }
   }, []);
@@ -91,27 +49,32 @@ function Map({ city, offers, activeOfferId }: MapProps) {
     }
   }, [city]);
 
-
   useEffect(() => {
+    const currentMarkers = markersRef.current;
 
-    if (markersRef.current) {
-      Object.values(markersRef.current).forEach(marker => marker.removeFrom(mapRef.current!));
+    if (currentMarkers) {
+      Object.values(currentMarkers).forEach((marker) =>
+        marker.removeFrom(mapRef.current!)
+      );
     }
 
-
     offers.forEach((offer) => {
-      const isHighlighted = activeOfferId === offer.id;
+      const isActive = activeOfferId === offer.id;
+      const marker = L.marker(
+        [offer.location.latitude, offer.location.longitude],
+        {
+          icon: createCustomIcon(isActive),
+        }
+      ).addTo(mapRef.current!);
 
-      const marker = L.marker([offer.location.latitude, offer.location.longitude], {
-        icon: createCustomMarkerIcon(isHighlighted ? 'orange' : '#007AFF'),
-      }).addTo(mapRef.current!);
-
-      markersRef.current[offer.id] = marker;
+      currentMarkers[offer.id] = marker;
     });
 
     return () => {
 
-      Object.values(markersRef.current).forEach(marker => marker.removeFrom(mapRef.current!));
+      Object.values(currentMarkers).forEach((marker) =>
+        marker.removeFrom(mapRef.current!)
+      );
     };
   }, [offers, activeOfferId]);
 
@@ -119,7 +82,7 @@ function Map({ city, offers, activeOfferId }: MapProps) {
     <section
       className="cities__map map"
       ref={mapContainerRef}
-      style={{ height: '600px', width: '100%' }}
+      style={{ height: '100%', width: '100%' }}
     />
   );
 }

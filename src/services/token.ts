@@ -14,7 +14,7 @@ export const saveToken = (token: Token): void => {
 };
 
 export const clearToken = (): void => {
-  localStorage.removeItem('six-cities-token');
+  localStorage.removeItem('token');
   delete api.defaults.headers.common['X-Token'];
 };
 

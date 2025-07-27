@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { sendComment } from '../store/reducer';
+import { sendComment } from '../store/thunks/comment-thunks';
 import { useParams } from 'react-router-dom';
-
+import { AppDispatch } from '../store';
 
 function ReviewsForm() {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState<number | null>(null);
+  const [comment, setComment] = useState('');
   const [reviewText, setReviewText] = useState('');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
 
   const handleRatingChange = (value: number) => {
@@ -23,15 +24,18 @@ function ReviewsForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!id || isSubmitDisabled) return;
+    if (!id || isSubmitDisabled) {
+      return;
+    }
 
-    dispatch(
-      sendComment({
-        offerId: id,
-        comment: reviewText,
-        rating,
-      })
-    );
+     dispatch(sendComment({ offerId: id, comment: reviewText, rating: rating! }))
+    .unwrap()
+    .then(() => {
+      setComment('');
+      setRating(null);
+    })
+    .catch(() => {
+    });
 
     setReviewText('');
     setRating(0);
@@ -139,6 +143,7 @@ function ReviewsForm() {
         </label>
       </div>
       <textarea
+        maxLength={300}
         className="reviews__textarea form__textarea"
         id="review"
         name="review"

@@ -1,29 +1,18 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
-import { api } from '../api';
 import { AuthorizationStatus } from '../const/const';
 import { saveToken } from '../services/token';
-import { clearToken } from '../services/token';
-import { AxiosInstance } from 'axios';
 import { ReviewTypes } from '../mocks/offer';
-import { AppDispatch, RootState } from '.';
-
-export type SortType =
-  | 'Popular'
-  | 'Price: low to high'
-  | 'Price: high to low'
-  | 'Top rated first';
-
-type User = {
-  name: string;
-  avatarUrl: string;
-  email: string;
-  token: string;
-};
+import { SortType, User } from './types/types';
+import { login, checkAuth, logout } from './thunks/auth-thunks';
+import {
+  loadOffersFromServer,
+  loadOfferById,
+  loadFavoritesFromServer,
+  toggleFavorite,
+} from './thunks/offer-thunks';
+import { sendComment, loadCommentsById } from './thunks/comment-thunks';
+import { api } from '../api';
 
 export type OffersState = {
   city: string;
@@ -39,9 +28,12 @@ export type OffersState = {
   nearbyOffers: OfferTypes[];
   favoriteOffers: OfferTypes[];
   comments: ReviewTypes[];
+  offerPageStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
 };
 
-const initialState: OffersState = {
+
+
+export const initialState: OffersState = {
   city: 'Paris',
   offers: [],
   allOffers: [],
@@ -55,44 +47,95 @@ const initialState: OffersState = {
   nearbyOffers: [],
   favoriteOffers: [],
   comments: [],
+  offerPageStatus: 'idle',
 };
 
 const offersSlice = createSlice({
   name: 'offers',
   initialState,
   reducers: {
-    setIsCheckingAuth(state, action) {
+    setIsCheckingAuth(state, action: PayloadAction<boolean>) {
       state.isCheckingAuth = action.payload;
     },
-    changeCity(state, action) {
+    changeCity(state, action: PayloadAction<string>) {
       state.city = action.payload;
       state.offers = state.allOffers.filter(
         (offer) => offer.city.name === action.payload
       );
     },
-    setSortType(state, action) {
+    setSortType(state, action: PayloadAction<SortType>) {
       state.sortType = action.payload;
     },
-    setUser(state, action) {
+    setUser(state, action: PayloadAction<User | null>) {
       state.user = action.payload;
     },
-    setAuthorizationStatus(state, action) {
+    setAuthorizationStatus(state, action: PayloadAction<AuthorizationStatus>) {
       state.authorizationStatus = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(login.fulfilled, (state, action) => {
+        const { user, token } = action.payload;
+        state.user = user;
+        state.authorizationStatus = AuthorizationStatus.Auth;
+        saveToken(token);
+        api.defaults.headers.common['X-Token'] = token;
+        localStorage.setItem('user', JSON.stringify(user));
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.authorizationStatus = AuthorizationStatus.Auth;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.authorizationStatus = AuthorizationStatus.NoAuth;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.authorizationStatus = AuthorizationStatus.NoAuth;
+        state.favoriteOffers = [];
+      })
+      .addCase(toggleFavorite.fulfilled, (state, action) => {
+        const updatedOffer = action.payload;
+
+        if (state.currentOffer?.id === updatedOffer.id) {
+          state.currentOffer = { ...updatedOffer };
+        }
+
+        const allIndex = state.allOffers.findIndex(
+          (o) => o.id === updatedOffer.id
+        );
+        if (allIndex !== -1) {
+          state.allOffers[allIndex] = updatedOffer;
+        }
+
+        const offersIndex = state.offers.findIndex(
+          (o) => o.id === updatedOffer.id
+        );
+        if (offersIndex !== -1) {
+          state.offers[offersIndex] = updatedOffer;
+        }
+
+        const nearbyIndex = state.nearbyOffers.findIndex(
+          (o) => o.id === updatedOffer.id
+        );
+        if (nearbyIndex !== -1) {
+          state.nearbyOffers[nearbyIndex] = updatedOffer;
+        }
+      })
       .addCase(loadOfferById.pending, (state) => {
+        state.offerPageStatus = 'loading';
         state.isLoading = true;
         state.currentOffer = null;
       })
       .addCase(loadOfferById.fulfilled, (state, action) => {
+        state.offerPageStatus = 'succeeded';
         state.isLoading = false;
         state.currentOffer = action.payload.offer;
         state.nearbyOffers = action.payload.nearby;
-        console.log('payload.nearby:', action.payload.nearby);
       })
       .addCase(loadOfferById.rejected, (state) => {
+        state.offerPageStatus = 'failed';
         state.isLoading = false;
         state.currentOffer = null;
       })
@@ -102,7 +145,6 @@ const offersSlice = createSlice({
         state.error = null;
       })
       .addCase(loadFavoritesFromServer.fulfilled, (state, action) => {
-        console.log('Загружено избранное:', action.payload);
         state.favoriteOffers = action.payload;
         state.isLoading = false;
       })
@@ -130,12 +172,16 @@ const offersSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loadCommentsById.fulfilled, (state, action) => {
-        state.comments = action.payload;
+        state.comments = action.payload.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         state.isLoading = false;
       })
       .addCase(loadCommentsById.rejected, (state) => {
         state.comments = [];
         state.isLoading = false;
+      })
+      .addCase(sendComment.fulfilled, (state, action) => {
+        state.comments.unshift(action.payload);
       });
   },
 });
@@ -147,168 +193,5 @@ export const {
   setIsCheckingAuth,
   setUser,
 } = offersSlice.actions;
-
-export const loadOffersFromServer = createAsyncThunk<OfferTypes[]>(
-  'offers/loadOffersFromServer',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get<OfferTypes[]>('/offers');
-      return response.data;
-    } catch (error) {
-      return rejectWithValue('Ошибка загрузки данных');
-    }
-  }
-);
-
-export const loadFavoritesFromServer = createAsyncThunk<OfferTypes[]>(
-  'offers/loadFavoritesFromServer',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get<OfferTypes[]>('/favorite');
-      return response.data;
-    } catch (error) {
-      return rejectWithValue('Ошибка загрузки избранного');
-    }
-  }
-);
-
-export const checkAuth = createAsyncThunk<
-  User,
-  void,
-  { dispatch: AppDispatch; extra: AxiosInstance }
->('user/checkAuth', async (_, { dispatch }) => {
-  try {
-    const response = await api.get('/login');
-    dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
-    dispatch(setUser(response.data));
-    return response.data;
-  } catch (error) {
-    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-    throw error;
-  } finally {
-    dispatch(setIsCheckingAuth(false));
-  }
-});
-
-export const loadCommentsById = createAsyncThunk<
-  ReviewTypes[],
-  string,
-  { extra: AxiosInstance }
->('offers/loadCommentsById', async (offerId, { extra: api }) => {
-  try {
-    const response = await api.get<ReviewTypes[]>(`/comments/${offerId}`);
-    return response.data;
-  } catch (error) {
-    throw new Error('Не удалось загрузить комментарии');
-  }
-});
-
-export const toggleFavorite = createAsyncThunk<
-  OfferTypes,
-  { offerId: string; status: 1 | 0 },
-  { extra: AxiosInstance; dispatch: AppDispatch }
->('offers/toggleFavorite', async ({ offerId, status }, { extra: api, dispatch }) => {
-  try {
-    const response = await api.post<OfferTypes>(`/favorite/${offerId}/${status}`);
-    dispatch(loadFavoritesFromServer());
-    return response.data;
-  } catch (error) {
-    return Promise.reject('Ошибка при обновлении избранного');
-  }
-});
-
-export const sendComment = createAsyncThunk<
-  ReviewTypes,
-  { offerId: string; comment: string; rating: number },
-  { extra: AxiosInstance }
->(
-  'offers/sendComment',
-  async ({ offerId, comment, rating }, { extra: api, rejectWithValue, dispatch }) => {
-    try {
-      const response = await api.post<ReviewTypes>(`/comments/${offerId}`, {
-        comment,
-        rating,
-      });
-
-      dispatch(loadCommentsById(offerId));
-
-      return response.data;
-    } catch (error) {
-      return rejectWithValue('Ошибка при отправке комментария');
-    }
-  }
-);
-
-export const loadOfferById = createAsyncThunk<
-  { offer: OfferTypes; nearby: OfferTypes[] },
-  string,
-  { extra: AxiosInstance }
->('offers/loadOfferById', async (offerId, { extra: api }) => {
-  console.log('Fetching offer with ID:', offerId);
-  try {
-    const offerResponse = await api.get<OfferTypes>(`/offers/${offerId}`);
-    const nearbyResponse = await api.get<OfferTypes[]>(
-      `/offers/${offerId}/nearby`
-    );
-
-    console.log('Offer data:', offerResponse.data);
-    console.log('Nearby offers:', nearbyResponse.data);
-
-    return {
-      offer: offerResponse.data,
-      nearby: nearbyResponse.data,
-    };
-  } catch (error) {
-    console.error('Ошибка при загрузке предложения:', error);
-    throw new Error('Предложение не найдено');
-  }
-});
-
-export const login = createAsyncThunk(
-  'user/login',
-  async (
-    { email, password }: { email: string; password: string },
-    { dispatch, rejectWithValue }
-  ) => {
-    try {
-      const response = await api.post('/login', { email, password });
-
-      const token = response.headers['x-token'] || response.data.token;
-      const user = response.data.user;
-
-      if (token) {
-        saveToken(token);
-        api.defaults.headers.common['X-Token'] = token;
-        dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
-        dispatch(setUser(user));
-      }
-
-      return response.data;
-    } catch (error) {
-      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-      return rejectWithValue('Неверный логин или пароль');
-    }
-  }
-);
-
-export const logout = createAsyncThunk(
-  'user/logout',
-  async (_, { dispatch }) => {
-    try {
-      await api.delete('/logout');
-    } catch (error) {
-      console.error('Ошибка при выходе', error);
-    } finally {
-      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-      dispatch(setUser(null));
-      clearToken();
-    }
-  }
-);
-
-export const selectComments = createSelector(
-  [(state: RootState) => state.comments],
-  (comments) => comments || []
-);
 
 export default offersSlice.reducer;

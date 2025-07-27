@@ -1,13 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setSortType } from '../store/reducer';
 import { useState } from 'react';
+import { SortType } from '../store/types/types';
 
 function SortOptions() {
   const dispatch = useDispatch();
   const currentSortType = useSelector((state: any) => state.sortType);
   const [isOpen, setOpen] = useState<boolean>(false);
 
-  const handleSortChange = (sortType:string) => {
+  const handleSortChange = (sortType:SortType) => {
     dispatch(setSortType(sortType));
     setOpen(false);
   };

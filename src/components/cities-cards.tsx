@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import { AppDispatch } from '../store';
 import { selectIsAuthorized } from '../store/selectors';
-import { toggleFavorite } from '../store/reducer';
+import { toggleFavorite } from '../store/thunks/offer-thunks';
 
 type CitiesCardProps = {
   offer: OfferTypes;
@@ -20,7 +20,6 @@ function CitiesCard({
   onMouseEnter,
   onMouseLeave,
 }: CitiesCardProps) {
-
   const dispatch = useDispatch<AppDispatch>();
   const isAuthorized = useSelector(selectIsAuthorized);
   const navigate = useNavigate();
@@ -64,7 +63,9 @@ function CitiesCard({
               <span className="place-card__price-text">&#47;&nbsp;night</span>
             </div>
             <button
-              className="place-card__bookmark-button button"
+              className={`place-card__bookmark-button button ${
+                offer.isFavorite ? 'place-card__bookmark-button--active' : ''
+              }`}
               type="button"
               onClick={handleFavoriteClick}
             >
@@ -85,7 +86,9 @@ function CitiesCard({
               <div>{offer.title}</div>
             </h2>
           </Link>
-          <p className="place-card__type">{offer.type}</p>
+          <p className="place-card__type">
+            {offer.type.charAt(0).toUpperCase() + offer.type.slice(1)}
+          </p>
         </div>
       </article>
     </div>
