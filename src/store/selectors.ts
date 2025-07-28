@@ -12,11 +12,9 @@ export const selectIsAuthorized = createSelector(
 
 export const selectRecentComments = createSelector(
   [(state: RootState) => state.comments],
-  (comments) => {
-    return [...comments]
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 10);
-  }
+  (comments) => [...comments]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 10)
 );
 
 export const getOfferWithNearby = createSelector(

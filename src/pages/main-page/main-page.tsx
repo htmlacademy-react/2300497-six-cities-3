@@ -28,7 +28,9 @@ function MainPage() {
     return <Spinner />;
   }
 
-  const offersInCurrentCity = allOffers.filter((offer) => offer.city.name === city);
+  const offersInCurrentCity = allOffers.filter(
+    (offer) => offer.city.name === city
+  );
 
   const sortedOffers = [...offersInCurrentCity];
 

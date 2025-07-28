@@ -10,7 +10,7 @@ function Header() {
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const favoriteOffers = useSelector(selectFavoriteOffers);
-  const count = favoriteOffers.length;
+  const count = favoriteOffers?.length || 0;
 
   const handleSignOut = () => {
     dispatch(logout());
@@ -55,7 +55,10 @@ function Header() {
                   </li>
                 </>
               ) : (
-                <Link to="/login" className="header__nav-link header__nav-link--profile">
+                <Link
+                  to="/login"
+                  className="header__nav-link header__nav-link--profile"
+                >
                   <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                   <span className="header__login">Sign in</span>
                 </Link>

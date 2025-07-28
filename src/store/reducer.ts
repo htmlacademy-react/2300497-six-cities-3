@@ -32,7 +32,6 @@ export type OffersState = {
 };
 
 
-
 export const initialState: OffersState = {
   city: 'Paris',
   offers: [],
