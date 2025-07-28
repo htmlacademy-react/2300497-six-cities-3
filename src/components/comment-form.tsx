@@ -4,7 +4,7 @@ import { sendComment } from '../store/thunks/comment-thunks';
 import { useParams } from 'react-router-dom';
 import { AppDispatch } from '../store';
 
-function ReviewsForm() {
+function CommentForm() {
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState('');
   const [reviewText, setReviewText] = useState('');
@@ -28,14 +28,13 @@ function ReviewsForm() {
       return;
     }
 
-     dispatch(sendComment({ offerId: id, comment: reviewText, rating: rating! }))
-    .unwrap()
-    .then(() => {
-      setComment('');
-      setRating(null);
-    })
-    .catch(() => {
-    });
+    dispatch(sendComment({ offerId: id, comment: reviewText, rating: rating! }))
+      .unwrap()
+      .then(() => {
+        setComment('');
+        setRating(null);
+      })
+      .catch(() => {});
 
     setReviewText('');
     setRating(0);
@@ -168,4 +167,4 @@ function ReviewsForm() {
   );
 }
 
-export default ReviewsForm;
+export default CommentForm;

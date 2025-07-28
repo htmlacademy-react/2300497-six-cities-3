@@ -4,15 +4,15 @@ import { loadOfferById } from '../../store/thunks/offer-thunks';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
-import OffersList from '../../components/OffersList';
-import CommentList from '../../components/comments-list';
+import OffersList from '../../components/Offers-list';
+import CommentsList from '../../components/comments-list';
 import Header from '../../components/header';
 import { getOfferWithNearby } from '../../store/selectors';
 import { AppDispatch } from '../../store';
 import ErrorBoundary from '../../components/error-boundary';
 import Spinner from '../../components/spinner';
 import { RootState } from '../../store';
-import ReviewsForm from '../../components/comment-form';
+import CommentForm from '../../components/comment-form';
 import { selectIsAuthorized } from '../../store/selectors';
 import { useNavigate } from 'react-router-dom';
 import { toggleFavorite } from '../../store/thunks/offer-thunks';
@@ -51,8 +51,12 @@ function Offer() {
     }
   }, [dispatch, id]);
 
-  if (offerPageStatus === 'loading') return <Spinner />;
-  if (offerPageStatus === 'failed' || !currentOffer) return <NotFoundScreen />;
+  if (offerPageStatus === 'loading') {
+    return <Spinner />;
+  }
+  if (offerPageStatus === 'failed' || !currentOffer) {
+    return <NotFoundScreen />;
+  }
 
   return (
     <div className="page">
@@ -83,10 +87,11 @@ function Offer() {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{currentOffer.title}</h1>
                 <button
-                  className={`offer__bookmark-button button ${currentOffer.isFavorite
-                    ? 'offer__bookmark-button--active'
-                    : ''
-                    }`}
+                  className={`offer__bookmark-button button ${
+                    currentOffer.isFavorite
+                      ? 'offer__bookmark-button--active'
+                      : ''
+                  }`}
                   type="button"
                   onClick={handleFavoriteClick}
                   disabled={isLoading}
@@ -146,10 +151,11 @@ function Offer() {
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div
-                    className={`offer__avatar-wrapper user__avatar-wrapper ${currentOffer.host?.isPro
-                      ? 'offer__avatar-wrapper--pro'
-                      : ''
-                      }`}
+                    className={`offer__avatar-wrapper user__avatar-wrapper ${
+                      currentOffer.host?.isPro
+                        ? 'offer__avatar-wrapper--pro'
+                        : ''
+                    }`}
                   >
                     <img
                       className="offer__avatar user__avatar"
@@ -180,9 +186,9 @@ function Offer() {
                   <span className="reviews__amount">{comments?.length}</span>
                 </h2>
                 <ErrorBoundary>
-                  <CommentList />
+                  <CommentsList />
                 </ErrorBoundary>
-                {isAuthorized && <ReviewsForm />}
+                {isAuthorized && <CommentForm />}
               </section>
             </div>
           </div>
@@ -197,13 +203,16 @@ function Offer() {
           >
             <Map
               city={currentOffer.city}
-              offers={[currentOffer, ...nearby
-                .filter(
-                  (item) =>
-                    item.city.name === currentOffer.city.name &&
-                    item.id !== currentOffer.id
-                )
-                .slice(0, 3)]}
+              offers={[
+                currentOffer,
+                ...nearby
+                  .filter(
+                    (item) =>
+                      item.city.name === currentOffer.city.name &&
+                      item.id !== currentOffer.id
+                  )
+                  .slice(0, 3),
+              ]}
               activeOfferId={activeOfferId}
             />
           </section>

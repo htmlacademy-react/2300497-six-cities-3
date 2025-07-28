@@ -39,7 +39,7 @@ function Favorites() {
   );
 
   if (!favoriteOffers || favoriteOffers.length === 0) {
-    return <FavoritesEmpty/>
+    return <FavoritesEmpty/>;
   }
 
   return (

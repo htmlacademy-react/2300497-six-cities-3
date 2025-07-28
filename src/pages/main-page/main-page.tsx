@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadOffersFromServer } from '../../store/thunks/offer-thunks';
 import { State } from '../../types/state';
-import OffersList from '../../components/OffersList';
+import OffersList from '../../components/Offers-list';
 import Map from '../../components/map';
 import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';

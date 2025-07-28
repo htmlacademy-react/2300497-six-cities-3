@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 
 
-function CommentList() {
+function CommentsList() {
   const { id } = useParams<{ id: string }>();
   const comments = useSelector(selectRecentComments);
   const dispatch = useDispatch<AppDispatch>();
@@ -28,4 +28,4 @@ function CommentList() {
     </ul>
   );
 }
-export default CommentList;
+export default CommentsList;
