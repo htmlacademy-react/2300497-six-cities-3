@@ -39,7 +39,7 @@ function Favorites() {
   );
 
   if (!favoriteOffers || favoriteOffers.length === 0) {
-    return <FavoritesEmpty/>;
+    return <FavoritesEmpty />;
   }
 
   return (
@@ -67,6 +67,10 @@ function Favorites() {
                         isActive={false}
                         onMouseEnter={() => {}}
                         onMouseLeave={() => {}}
+                        wrapperClassName="favorites__card"
+                        imageWrapperClassName="favorites__image-wrapper"
+                        imageWidth={150}
+                        imageHeight={110}
                       />
                     ))}
                   </div>

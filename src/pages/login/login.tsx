@@ -23,7 +23,7 @@ function Login() {
     setCurrentCity(city);
   }, []);
 
-  const validate = (password: string) => {
+  const validate = () => {
     const errors = [];
     if (password.length < 6) {
       errors.push('Пароль должен быть не менее 6 символов');
@@ -39,7 +39,7 @@ function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors = validate(password);
+    const newErrors = validate();
     if (newErrors.length > 0) {
       setErrors(newErrors);
       return;
@@ -107,6 +107,20 @@ function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
+              {error.length > 0 && (
+                <div className="login__error">
+                  <ul>
+                    {error.map((err, index) => (
+                      <li
+                        key={index}
+                        style={{ color: 'red', fontSize: '14px' }}
+                      >
+                        {err}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <button
                 className="login__submit form__submit button"
                 type="submit"
