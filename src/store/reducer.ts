@@ -31,7 +31,6 @@ export type OffersState = {
   offerPageStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
 };
 
-
 export const initialState: OffersState = {
   city: 'Paris',
   offers: [],
@@ -121,6 +120,16 @@ const offersSlice = createSlice({
         if (nearbyIndex !== -1) {
           state.nearbyOffers[nearbyIndex] = updatedOffer;
         }
+
+        if (updatedOffer.isFavorite) {
+          if (!state.favoriteOffers.some((o) => o.id === updatedOffer.id)) {
+            state.favoriteOffers.push(updatedOffer);
+          }
+        } else {
+          state.favoriteOffers = state.favoriteOffers.filter(
+            (o) => o.id !== updatedOffer.id
+          );
+        }
       })
       .addCase(loadOfferById.pending, (state) => {
         state.offerPageStatus = 'loading';
@@ -172,7 +181,8 @@ const offersSlice = createSlice({
       })
       .addCase(loadCommentsById.fulfilled, (state, action) => {
         state.comments = action.payload.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
         state.isLoading = false;
       })
       .addCase(loadCommentsById.rejected, (state) => {
