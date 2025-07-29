@@ -4,7 +4,7 @@ import { loadOfferById } from '../../store/thunks/offer-thunks';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
-import OffersList from '../../components/Offers-list';
+import OffersList from '../../components/offers-list';
 import CommentsList from '../../components/comments-list';
 import Header from '../../components/header';
 import { getOfferWithNearby } from '../../store/selectors';
@@ -213,7 +213,7 @@ function Offer() {
                   )
                   .slice(0, 3),
               ]}
-              activeOfferId={activeOfferId}
+              activeOfferId={currentOffer.id}
             />
           </section>
         </section>

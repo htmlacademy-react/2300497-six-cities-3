@@ -31,6 +31,7 @@ function CitiesCard({
   const dispatch = useDispatch<AppDispatch>();
   const isAuthorized = useSelector(selectIsAuthorized);
   const navigate = useNavigate();
+  const roundedRating = Math.round(offer.rating);
 
   const handleFavoriteClick = () => {
     if (!isAuthorized) {
@@ -84,7 +85,7 @@ function CitiesCard({
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${(offer.rating / 5) * 100}%` }}></span>
+            <span style={{ width: `${(roundedRating / 5) * 100}%` }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
