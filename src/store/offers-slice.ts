@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
 import { loadOffersFromServer } from './thunks/offer-thunks';
+import { SortType } from './types/types';
 
 const offersSlice = createSlice({
   name: 'offers',
@@ -10,10 +11,10 @@ const offersSlice = createSlice({
     sortType: 'Popular' as const,
   },
   reducers: {
-    changeCity: (state, action) => {
+    changeCity: (state, action: PayloadAction<string>) => {
       state.city = action.payload;
     },
-    setSortType: (state, action) => {
+    setSortType: (state, action: PayloadAction<SortType>) => {
       state.sortType = action.payload;
     },
   },

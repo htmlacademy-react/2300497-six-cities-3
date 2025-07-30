@@ -16,7 +16,7 @@ function MainPage() {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector((state: State) => state.isLoading);
   const sortedOffers = useSelector(selectCurrentOffers);
-
+  const city = useSelector((state: State) => state.city);
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,7 +28,6 @@ function MainPage() {
   }
 
   if (sortedOffers.length === 0) {
-    const city = useSelector((state: any) => state.city);
     return <MainEmpty city={city} />;
   }
 

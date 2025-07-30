@@ -40,10 +40,9 @@ function CommentForm() {
         setReviewText('');
         setRating(null);
       })
-      .catch((err) => {
-        setError(
-          err?.message || 'Не удалось отправить отзыв. Попробуйте ещё раз.'
-        );
+      .catch((err: unknown) => {
+        const message = (err as Error)?.message || 'Не удалось отправить отзыв. Попробуйте ещё раз.';
+        setError(message);
       })
       .finally(() => {
         setIsSubmitting(false);

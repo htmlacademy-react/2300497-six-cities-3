@@ -51,6 +51,12 @@ function Offer() {
     }
   }, [dispatch, id]);
 
+  useEffect(() => {
+    if (currentOffer) {
+      setActiveOfferId(currentOffer.id);
+    }
+  }, [currentOffer]);
+
   if (offerPageStatus === 'loading') {
     return <Spinner />;
   }
@@ -213,7 +219,7 @@ function Offer() {
                   )
                   .slice(0, 3),
               ]}
-              activeOfferId={currentOffer.id}
+              activeOfferId={activeOfferId}
             />
           </section>
         </section>

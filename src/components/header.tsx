@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../store/thunks/auth-thunks';
 import { selectFavoriteOffers } from '../store/selectors';
 import { AppDispatch, RootState } from '../store';
+import { AuthorizationStatus } from '../const/const';
 
 function Header() {
   const status = useSelector((state: RootState) => state.authorizationStatus);
@@ -34,7 +35,7 @@ function Header() {
 
           <nav className="header__nav">
             <ul className="header__nav-list">
-              {status === 'AUTH' ? (
+              {status === AuthorizationStatus.Auth ? (
                 <>
                   <li className="header__nav-item user">
                     <Link

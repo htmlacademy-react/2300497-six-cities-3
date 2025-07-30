@@ -3,15 +3,7 @@ import { changeCity } from '../store/reducer';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-
-export const cities = [
-  'Paris',
-  'Cologne',
-  'Brussels',
-  'Amsterdam',
-  'Hamburg',
-  'Dusseldorf',
-];
+import { cities } from '../store/types/types';
 
 function CityList() {
   const dispatch = useDispatch();
