@@ -4,7 +4,14 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
-export const cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+export const cities = [
+  'Paris',
+  'Cologne',
+  'Brussels',
+  'Amsterdam',
+  'Hamburg',
+  'Dusseldorf',
+];
 
 function CityList() {
   const dispatch = useDispatch();
@@ -19,8 +26,9 @@ function CityList() {
       {cities.map((city) => (
         <li key={city} className="locations__item">
           <Link
-            className={`locations__item-link tabs__item ${currentCity === city ? 'tabs__item--active' : ''
-              }`}
+            className={`locations__item-link tabs__item ${
+              currentCity === city ? 'tabs__item--active' : ''
+            }`}
             to={`/${city}`}
             onClick={(e) => {
               e.preventDefault();

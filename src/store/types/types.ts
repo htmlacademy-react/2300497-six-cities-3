@@ -18,3 +18,8 @@ export type LoginResponse = {
   avatarUrl: string;
   isPro: boolean;
 };
+
+export const ReviewValidation = {
+  MIN_LENGTH: 50,
+  MAX_LENGTH: 300,
+} as const;

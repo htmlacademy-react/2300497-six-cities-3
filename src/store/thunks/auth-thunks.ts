@@ -7,7 +7,7 @@ import { AppDispatch } from '..';
 import { setAuthorizationStatus, setUser, setIsCheckingAuth } from '../reducer';
 import { clearToken } from '../../services/token';
 import { AuthorizationStatus } from '../../const/const';
-
+import { loadFavoritesFromServer } from './offer-thunks';
 
 export const login = createAsyncThunk(
   'user/login',
@@ -16,7 +16,10 @@ export const login = createAsyncThunk(
     { dispatch, rejectWithValue }
   ) => {
     try {
-  const response = await api.post<LoginResponse>('/login', { email, password });
+      const response = await api.post<LoginResponse>('/login', {
+        email,
+        password,
+      });
 
       const { token, name, email: userEmail, avatarUrl } = response.data;
 
@@ -27,6 +30,7 @@ export const login = createAsyncThunk(
         api.defaults.headers.common['X-Token'] = token;
         dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
         dispatch(setUser(user));
+        dispatch(loadFavoritesFromServer());
       }
 
       return { token, user };

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { sendComment } from '../store/thunks/comment-thunks';
 import { useParams } from 'react-router-dom';
 import { AppDispatch } from '../store';
+import { ReviewValidation } from '../store/types/types';
 
 function CommentForm() {
   const [rating, setRating] = useState<number | null>(null);
@@ -19,7 +20,7 @@ function CommentForm() {
     setReviewText(e.target.value);
   };
 
-  const isSubmitDisabled = rating === 0 || reviewText.length < 50;
+  const isSubmitDisabled = rating === 0 || reviewText.length < ReviewValidation.MIN_LENGTH;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,7 +143,8 @@ function CommentForm() {
         </label>
       </div>
       <textarea
-        maxLength={300}
+        minLength={ReviewValidation.MIN_LENGTH}
+        maxLength={ReviewValidation.MAX_LENGTH}
         className="reviews__textarea form__textarea"
         id="review"
         name="review"
