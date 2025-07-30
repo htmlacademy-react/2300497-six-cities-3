@@ -34,7 +34,6 @@ function MainPage() {
 
   const currentCity = sortedOffers[0].city.name;
 
-
   return (
     <div className="page page--gray page--main">
       <Header />
