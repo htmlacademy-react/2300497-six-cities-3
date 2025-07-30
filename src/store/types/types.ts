@@ -18,3 +18,10 @@ export type LoginResponse = {
   avatarUrl: string;
   isPro: boolean;
 };
+
+export const ReviewValidation = {
+  MIN_LENGTH: 50,
+  MAX_LENGTH: 300,
+} as const;
+
+export const cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'] as const;

@@ -10,14 +10,13 @@ import Spinner from '../../components/spinner';
 import Header from '../../components/header';
 import { AppDispatch } from '../../store';
 import MainEmpty from '../main-empty/main-empty';
+import { selectCurrentOffers } from '../../store/selectors';
 
 function MainPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const city = useSelector((state: State) => state.city);
-  const allOffers = useSelector((state: State) => state.allOffers);
-  const sortType = useSelector((state: State) => state.sortType);
   const isLoading = useSelector((state: State) => state.isLoading);
-
+  const sortedOffers = useSelector(selectCurrentOffers);
+  const city = useSelector((state: State) => state.city);
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,29 +27,11 @@ function MainPage() {
     return <Spinner />;
   }
 
-  const offersInCurrentCity = allOffers.filter(
-    (offer) => offer.city.name === city
-  );
-
-  const sortedOffers = [...offersInCurrentCity];
-
-  switch (sortType) {
-    case 'Price: low to high':
-      sortedOffers.sort((a, b) => a.price - b.price);
-      break;
-    case 'Price: high to low':
-      sortedOffers.sort((a, b) => b.price - a.price);
-      break;
-    case 'Top rated first':
-      sortedOffers.sort((a, b) => b.rating - a.rating);
-      break;
-    default:
-      break;
-  }
-
   if (sortedOffers.length === 0) {
     return <MainEmpty city={city} />;
   }
+
+  const currentCity = sortedOffers[0].city.name;
 
   return (
     <div className="page page--gray page--main">
@@ -66,7 +47,7 @@ function MainPage() {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{`${sortedOffers.length} places to stay in ${city}`}</b>
+              <b className="places__found">{`${sortedOffers.length} places to stay in ${currentCity}`}</b>
               <SortOptions />
               <OffersList
                 offersType={sortedOffers}

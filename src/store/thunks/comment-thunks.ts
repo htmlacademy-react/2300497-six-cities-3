@@ -1,8 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ReviewTypes } from '../../mocks/offer';
 import { AxiosInstance } from 'axios';
-import { RootState } from '..';
-import { createSelector } from '@reduxjs/toolkit';
 
 export const loadCommentsById = createAsyncThunk<
   ReviewTypes[],

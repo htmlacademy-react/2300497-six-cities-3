@@ -21,10 +21,6 @@ class ErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Ошибка в компоненте:', error, errorInfo);
-  }
-
   render() {
     if (this.state.hasError) {
       return <h2>Что-то пошло не так. Попробуйте перезагрузить страницу.</h2>;

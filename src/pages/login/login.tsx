@@ -5,7 +5,7 @@ import { login } from '../../store/thunks/auth-thunks';
 import { Link } from 'react-router-dom';
 import { changeCity } from '../../store/reducer';
 import { randomCity } from '../../utils/random-city-start';
-import { cities } from '../../components/city-list';
+import { cities } from '../../store/types/types';
 import { AppDispatch, RootState } from '../../store';
 import { AuthorizationStatus } from '../../const/const';
 
@@ -110,11 +110,8 @@ function Login() {
               {error.length > 0 && (
                 <div className="login__error">
                   <ul>
-                    {error.map((err, index) => (
-                      <li
-                        key={index}
-                        style={{ color: 'red', fontSize: '14px' }}
-                      >
+                    {error.map((err) => (
+                      <li key={err} style={{ color: 'red', fontSize: '14px' }}>
                         {err}
                       </li>
                     ))}

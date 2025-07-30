@@ -3,11 +3,13 @@ import { useDispatch } from 'react-redux';
 import { sendComment } from '../store/thunks/comment-thunks';
 import { useParams } from 'react-router-dom';
 import { AppDispatch } from '../store';
+import { ReviewValidation } from '../store/types/types';
 
 function CommentForm() {
   const [rating, setRating] = useState<number | null>(null);
-  const [comment, setComment] = useState('');
   const [reviewText, setReviewText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
 
@@ -19,25 +21,32 @@ function CommentForm() {
     setReviewText(e.target.value);
   };
 
-  const isSubmitDisabled = rating === 0 || reviewText.length < 50;
+  const isFormValid =
+    rating !== null && reviewText.length >= ReviewValidation.MIN_LENGTH;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!id || isSubmitDisabled) {
+    if (!id || !isFormValid || isSubmitting) {
       return;
     }
 
-    dispatch(sendComment({ offerId: id, comment: reviewText, rating: rating! }))
+    setIsSubmitting(true);
+    setError(null);
+
+    dispatch(sendComment({ offerId: id, comment: reviewText, rating: rating }))
       .unwrap()
       .then(() => {
-        setComment('');
+        setReviewText('');
         setRating(null);
       })
-      .catch(() => {});
-
-    setReviewText('');
-    setRating(0);
+      .catch((err: unknown) => {
+        const message = (err as Error)?.message || 'Не удалось отправить отзыв. Попробуйте ещё раз.';
+        setError(message);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -142,7 +151,8 @@ function CommentForm() {
         </label>
       </div>
       <textarea
-        maxLength={300}
+        minLength={ReviewValidation.MIN_LENGTH}
+        maxLength={ReviewValidation.MAX_LENGTH}
         className="reviews__textarea form__textarea"
         id="review"
         name="review"
@@ -156,9 +166,17 @@ function CommentForm() {
           <span className="reviews__star">rating</span> and describe your stay
           with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
+        {error && (
+          <p
+            className="reviews__error"
+            style={{ color: 'red', fontSize: '14px', margin: '5px 0' }}
+          >
+            {error}
+          </p>
+        )}
         <button
           className="reviews__submit form__submit button"
-          disabled={isSubmitDisabled}
+          disabled={!isFormValid || isSubmitting}
         >
           Submit
         </button>
