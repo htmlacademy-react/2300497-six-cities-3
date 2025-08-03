@@ -8,14 +8,17 @@ const favoritesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadFavoritesFromServer.fulfilled, (state, action) => action.payload)
+      .addCase(loadFavoritesFromServer.fulfilled, (_state, action) => {
+        return action.payload;
+      })
       .addCase(toggleFavorite.fulfilled, (state, action) => {
-        const offer = action.payload;
-        const index = state.findIndex((o) => o.id === offer.id);
-        if (index !== -1 && !offer.isFavorite) {
-          state.splice(index, 1);
-        } else if (index === -1 && offer.isFavorite) {
-          state.push(offer);
+        const updatedOffer = action.payload;
+        if (updatedOffer.isFavorite) {
+          if (!state.some(o => o.id === updatedOffer.id)) {
+            state.push(updatedOffer);
+          }
+        } else {
+          return state.filter(o => o.id !== updatedOffer.id);
         }
       });
   },

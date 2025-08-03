@@ -7,8 +7,8 @@ import { AppDispatch, RootState } from '../store';
 import { AuthorizationStatus } from '../const/const';
 
 function Header() {
-  const status = useSelector((state: RootState) => state.authorizationStatus);
-  const user = useSelector((state: RootState) => state.user);
+  const status = useSelector((state: RootState) => state.user.authorizationStatus);
+  const userEmail = useSelector((state: RootState) => state.user.user?.email);
   const dispatch = useDispatch<AppDispatch>();
   const favoriteOffers = useSelector(selectFavoriteOffers);
   const count = favoriteOffers?.length || 0;
@@ -44,7 +44,7 @@ function Header() {
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                       <span className="header__user-name user__name">
-                        {user?.email}
+                        {userEmail}
                       </span>
                       <span className="header__favorite-count">{count}</span>
                     </Link>

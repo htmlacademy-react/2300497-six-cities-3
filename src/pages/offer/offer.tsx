@@ -4,7 +4,7 @@ import { loadOfferById } from '../../store/thunks/offer-thunks';
 import { useParams } from 'react-router-dom';
 import NotFoundScreen from '../../components/not-found';
 import Map from '../../components/map';
-import OffersList from '../../components/Offers-list';
+import OffersList from '../../components/offers-list';
 import CommentsList from '../../components/comments-list';
 import Header from '../../components/header';
 import { getOfferWithNearby } from '../../store/selectors';
@@ -20,14 +20,14 @@ import { toggleFavorite } from '../../store/thunks/offer-thunks';
 function Offer() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { nearby, isLoading } = useSelector(getOfferWithNearby);
+  const { nearby } = useSelector(getOfferWithNearby);
   const comments = useSelector((state: RootState) => state.comments);
   const isAuthorized = useSelector(selectIsAuthorized);
   const navigate = useNavigate();
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
-  const { offerPageStatus, currentOffer } = useSelector((state: RootState) => ({
-    offerPageStatus: state.offerPageStatus,
-    currentOffer: state.currentOffer,
+  const { currentOffer, isLoading } = useSelector((state: RootState) => ({
+    currentOffer: state.currentOffer.offer,
+    isLoading: state.currentOffer.status === 'loading',
   }));
 
   const handleFavoriteClick = () => {
@@ -57,10 +57,10 @@ function Offer() {
     }
   }, [currentOffer]);
 
-  if (offerPageStatus === 'loading') {
+  if (isLoading) {
     return <Spinner />;
   }
-  if (offerPageStatus === 'failed' || !currentOffer) {
+  if (!currentOffer) {
     return <NotFoundScreen />;
   }
 
@@ -93,10 +93,9 @@ function Offer() {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{currentOffer.title}</h1>
                 <button
-                  className={`offer__bookmark-button button ${
-                    currentOffer.isFavorite
-                      ? 'offer__bookmark-button--active'
-                      : ''
+                  className={`offer__bookmark-button button ${currentOffer.isFavorite
+                    ? 'offer__bookmark-button--active'
+                    : ''
                   }`}
                   type="button"
                   onClick={handleFavoriteClick}
@@ -157,10 +156,9 @@ function Offer() {
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div
-                    className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      currentOffer.host?.isPro
-                        ? 'offer__avatar-wrapper--pro'
-                        : ''
+                    className={`offer__avatar-wrapper user__avatar-wrapper ${currentOffer.host?.isPro
+                      ? 'offer__avatar-wrapper--pro'
+                      : ''
                     }`}
                   >
                     <img

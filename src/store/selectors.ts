@@ -2,11 +2,13 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { OfferTypes } from '../mocks/offer';
 
-export const selectFavoriteOffers = (state: RootState) => state.favoriteOffers;
-export const selectUser = (state: RootState) => state.user;
-export const selectAllOffers = (state: RootState) => state.allOffers;
-export const selectCity = (state: RootState) => state.city;
-export const selectSortType = (state: RootState) => state.sortType;
+export const selectFavoriteOffers = (state: RootState) => state.favorites;
+export const selectUser = (state: RootState) => state.user.user;
+export const selectAllOffers = (state: RootState) => state.offers.allOffers;
+export const selectCity = (state: RootState) => state.offers.city;
+export const selectSortType = (state: RootState) => state.offers.sortType;
+export const selectIsCheckingAuth = (state: RootState) => state.user.isCheckingAuth;
+export const selectOffersLoading = (state: RootState) => state.offers.isLoading;
 
 export const selectCurrentOffers = createSelector(
   [selectAllOffers, selectCity, selectSortType],
@@ -43,9 +45,9 @@ export const selectRecentComments = createSelector(
 
 export const getOfferWithNearby = createSelector(
   [
-    (state: RootState) => state.currentOffer,
-    (state: RootState) => state.nearbyOffers,
-    (state: RootState) => state.isLoading,
+    (state: RootState) => state.currentOffer.offer,
+    (state: RootState) => state.currentOffer.nearbyOffers,
+    (state: RootState) => state.currentOffer.status === 'loading',
   ],
   (currentOffer: OfferTypes | null, nearby: OfferTypes[], isLoading: boolean) => ({
     currentOffer,

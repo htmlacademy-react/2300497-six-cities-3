@@ -7,7 +7,7 @@ import { cities } from '../store/types/types';
 
 function CityList() {
   const dispatch = useDispatch();
-  const currentCity = useSelector((state: RootState) => state.city);
+  const currentCity = useSelector((state: RootState) => state.offers.city);
 
   const handleCityClick = (city: string) => {
     dispatch(changeCity(city));

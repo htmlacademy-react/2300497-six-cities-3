@@ -13,7 +13,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch<AppDispatch>();
-  const status = useSelector((state: RootState) => state.authorizationStatus);
+  const status = useSelector((state: RootState) => state.user.authorizationStatus);
   const [currentCity, setCurrentCity] = useState<string>('Paris');
   const navigate = useNavigate();
   const [error, setErrors] = useState<string[]>([]);

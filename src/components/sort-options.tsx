@@ -6,7 +6,7 @@ import { RootState } from '../store';
 
 function SortOptions() {
   const dispatch = useDispatch();
-  const currentSortType = useSelector((state: RootState) => state.sortType);
+  const currentSortType = useSelector((state: RootState) => state.offers.sortType);
   const [isOpen, setOpen] = useState<boolean>(false);
 
   const handleSortChange = (sortType:SortType) => {

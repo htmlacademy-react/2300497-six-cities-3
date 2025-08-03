@@ -13,5 +13,4 @@ const rootReducer = combineReducers({
   comments: commentsReducer,
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadOffersFromServer } from '../../store/thunks/offer-thunks';
 import { State } from '../../types/state';
-import OffersList from '../../components/Offers-list';
+import OffersList from '../../components/offers-list';
 import Map from '../../components/map';
 import CityList from '../../components/city-list';
 import SortOptions from '../../components/sort-options';
@@ -11,12 +11,13 @@ import Header from '../../components/header';
 import { AppDispatch } from '../../store';
 import MainEmpty from '../main-empty/main-empty';
 import { selectCurrentOffers } from '../../store/selectors';
+import { selectOffersLoading } from '../../store/selectors';
 
 function MainPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const isLoading = useSelector((state: State) => state.isLoading);
+  const isLoading = useSelector(selectOffersLoading);
   const sortedOffers = useSelector(selectCurrentOffers);
-  const city = useSelector((state: State) => state.city);
+  const city = useSelector((state: State) => state.offers.city);
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
 
   useEffect(() => {
