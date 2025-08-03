@@ -30,6 +30,10 @@ function Offer() {
     isLoading: state.currentOffer.status === 'loading',
   }));
 
+    const isFavorite = useSelector((state: RootState) =>
+    currentOffer ? state.favorites.some((fav) => fav.id === currentOffer.id) : false
+  );
+
   const handleFavoriteClick = () => {
     if (!isAuthorized) {
       navigate('/login');
@@ -40,10 +44,11 @@ function Offer() {
       return;
     }
 
-    const newStatus = currentOffer.isFavorite ? 0 : 1;
+    const newStatus = isFavorite ? 0 : 1;
 
     dispatch(toggleFavorite({ offerId: currentOffer.id, status: newStatus }));
   };
+  
 
   useEffect(() => {
     if (id) {
@@ -93,10 +98,10 @@ function Offer() {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{currentOffer.title}</h1>
                 <button
-                  className={`offer__bookmark-button button ${currentOffer.isFavorite
+                  className={`offer__bookmark-button button ${isFavorite
                     ? 'offer__bookmark-button--active'
                     : ''
-                  }`}
+                    }`}
                   type="button"
                   onClick={handleFavoriteClick}
                   disabled={isLoading}
@@ -159,7 +164,7 @@ function Offer() {
                     className={`offer__avatar-wrapper user__avatar-wrapper ${currentOffer.host?.isPro
                       ? 'offer__avatar-wrapper--pro'
                       : ''
-                    }`}
+                      }`}
                   >
                     <img
                       className="offer__avatar user__avatar"

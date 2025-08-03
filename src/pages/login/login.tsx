@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../../store/thunks/auth-thunks';
 import { Link } from 'react-router-dom';
-import { changeCity } from '../../store/reducer';
+import { changeCity } from '../../store/offers-slice';
 import { randomCity } from '../../utils/random-city-start';
 import { cities } from '../../store/types/types';
 import { AppDispatch, RootState } from '../../store';

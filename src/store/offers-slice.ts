@@ -37,7 +37,7 @@ const offersSlice = createSlice({
       .addCase(toggleFavorite.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
 
-        const allIndex = state.allOffers.findIndex(o => o.id === updatedOffer.id);
+        const allIndex = state.allOffers.findIndex((o) => o.id === updatedOffer.id);
         if (allIndex !== -1) {
           state.allOffers[allIndex] = updatedOffer;
         }

@@ -17,10 +17,6 @@ class ErrorBoundary extends React.Component<
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(_: Error) {
-    return { hasError: true };
-  }
-
   render() {
     if (this.state.hasError) {
       return <h2>Что-то пошло не так. Попробуйте перезагрузить страницу.</h2>;

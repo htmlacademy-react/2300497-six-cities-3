@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux/es/hooks/useSelector';
 import { AppDispatch } from '../store';
 import { selectIsAuthorized } from '../store/selectors';
 import { toggleFavorite } from '../store/thunks/offer-thunks';
+import { RootState } from '../store';
 
 type CitiesCardProps = {
   offer: OfferTypes;
@@ -32,6 +33,11 @@ function CitiesCard({
   const isAuthorized = useSelector(selectIsAuthorized);
   const navigate = useNavigate();
   const roundedRating = Math.round(offer.rating);
+
+  const isFavorite = useSelector((state: RootState) =>
+    state.favorites.some((fav) => fav.id === offer.id)
+  );
+
 
   const handleFavoriteClick = () => {
     if (!isAuthorized) {
@@ -71,9 +77,8 @@ function CitiesCard({
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button
-            className={`place-card__bookmark-button button ${
-              offer.isFavorite ? 'place-card__bookmark-button--active' : ''
-            }`}
+            className={`place-card__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''
+              }`}
             type="button"
             onClick={handleFavoriteClick}
           >

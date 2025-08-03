@@ -30,7 +30,7 @@ const currentOfferSlice = createSlice({
         if (state.offer?.id === updatedOffer.id) {
           state.offer = { ...updatedOffer };
         }
-        const nearbyIndex = state.nearbyOffers.findIndex(o => o.id === updatedOffer.id);
+        const nearbyIndex = state.nearbyOffers.findIndex((o) => o.id === updatedOffer.id);
         if (nearbyIndex !== -1) {
           state.nearbyOffers[nearbyIndex] = updatedOffer;
         }

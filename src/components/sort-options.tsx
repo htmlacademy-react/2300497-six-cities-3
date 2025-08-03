@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setSortType } from '../store/reducer';
+import { setSortType } from '../store/offers-slice';
 import { useState } from 'react';
 import { SortType } from '../store/types/types';
 import { RootState } from '../store';

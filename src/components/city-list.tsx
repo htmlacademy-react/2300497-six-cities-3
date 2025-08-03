@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { changeCity } from '../store/reducer';
+import { changeCity } from '../store/offers-slice';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
