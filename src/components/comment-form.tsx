@@ -63,6 +63,7 @@ function CommentForm() {
           type="radio"
           checked={rating === 5}
           onChange={() => handleRatingChange(5)}
+          disabled={isSubmitting}
         />
         <label
           htmlFor="5-stars"
@@ -82,6 +83,7 @@ function CommentForm() {
           type="radio"
           checked={rating === 4}
           onChange={() => handleRatingChange(4)}
+          disabled={isSubmitting}
         />
         <label
           htmlFor="4-stars"
@@ -101,6 +103,7 @@ function CommentForm() {
           type="radio"
           checked={rating === 3}
           onChange={() => handleRatingChange(3)}
+          disabled={isSubmitting}
         />
         <label
           htmlFor="3-stars"
@@ -120,6 +123,7 @@ function CommentForm() {
           type="radio"
           checked={rating === 2}
           onChange={() => handleRatingChange(2)}
+          disabled={isSubmitting}
         />
         <label
           htmlFor="2-stars"
@@ -139,6 +143,7 @@ function CommentForm() {
           type="radio"
           checked={rating === 1}
           onChange={() => handleRatingChange(1)}
+          disabled={isSubmitting}
         />
         <label
           htmlFor="1-star"
@@ -159,6 +164,7 @@ function CommentForm() {
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={reviewText}
         onChange={handleTextChange}
+        disabled={isSubmitting}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
