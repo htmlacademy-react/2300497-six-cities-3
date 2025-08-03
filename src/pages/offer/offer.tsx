@@ -20,17 +20,13 @@ import { toggleFavorite } from '../../store/thunks/offer-thunks';
 function Offer() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { nearby } = useSelector(getOfferWithNearby);
+  const { nearby, currentOffer, isLoading } = useSelector(getOfferWithNearby);
   const comments = useSelector((state: RootState) => state.comments);
   const isAuthorized = useSelector(selectIsAuthorized);
   const navigate = useNavigate();
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
-  const { currentOffer, isLoading } = useSelector((state: RootState) => ({
-    currentOffer: state.currentOffer.offer,
-    isLoading: state.currentOffer.status === 'loading',
-  }));
 
-    const isFavorite = useSelector((state: RootState) =>
+  const isFavorite = useSelector((state: RootState) =>
     currentOffer ? state.favorites.some((fav) => fav.id === currentOffer.id) : false
   );
 
@@ -48,7 +44,7 @@ function Offer() {
 
     dispatch(toggleFavorite({ offerId: currentOffer.id, status: newStatus }));
   };
-  
+
 
   useEffect(() => {
     if (id) {
@@ -101,7 +97,7 @@ function Offer() {
                   className={`offer__bookmark-button button ${isFavorite
                     ? 'offer__bookmark-button--active'
                     : ''
-                    }`}
+                  }`}
                   type="button"
                   onClick={handleFavoriteClick}
                   disabled={isLoading}
@@ -164,7 +160,7 @@ function Offer() {
                     className={`offer__avatar-wrapper user__avatar-wrapper ${currentOffer.host?.isPro
                       ? 'offer__avatar-wrapper--pro'
                       : ''
-                      }`}
+                    }`}
                   >
                     <img
                       className="offer__avatar user__avatar"

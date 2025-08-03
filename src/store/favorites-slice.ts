@@ -20,9 +20,7 @@ const favoritesSlice = createSlice({
           return state.filter((o) => o.id !== updatedOffer.id);
         }
       })
-      .addCase(logout.fulfilled, (_state) => {
-        return [];
-      });
+      .addCase(logout.fulfilled, () => []);
   },
 });
 
