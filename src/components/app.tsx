@@ -14,7 +14,7 @@ import { AppDispatch } from '../store';
 
 function App(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>();
-  const status = useSelector((state: State) => state.authorizationStatus);
+  const status = useSelector((state: State) => state.user.authorizationStatus);
 
   useEffect(() => {
     dispatch(checkAuth());

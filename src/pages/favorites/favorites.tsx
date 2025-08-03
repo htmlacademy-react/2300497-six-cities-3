@@ -12,7 +12,7 @@ import { AuthorizationStatus } from '../../const/const';
 import FavoritesEmpty from '../favorites-empty/favorites';
 
 function Favorites() {
-  const status = useSelector((state: State) => state.authorizationStatus);
+  const status = useSelector((state: State) => state.user.authorizationStatus);
   const dispatch = useDispatch<AppDispatch>();
   const favoriteOffers = useSelector(selectFavoriteOffers);
 

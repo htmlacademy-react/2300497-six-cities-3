@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../const/const';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import Spinner from './spinner';
-import { State } from '../types/state';
+import { selectIsCheckingAuth } from '../store/selectors';
 
 type PrivateRouteProps = {
   authorizationStatus: AuthorizationStatus;
@@ -11,7 +11,7 @@ type PrivateRouteProps = {
 
 function PrivateRoute(props: PrivateRouteProps): JSX.Element {
   const { authorizationStatus, children } = props;
-  const isCheckingAuth = useSelector((state: State) => state.isCheckingAuth);
+  const isCheckingAuth = useSelector(selectIsCheckingAuth);
 
   if (isCheckingAuth) {
     return <Spinner />;

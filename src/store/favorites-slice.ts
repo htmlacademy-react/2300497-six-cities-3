@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
 import { loadFavoritesFromServer, toggleFavorite } from './thunks/offer-thunks';
+import { logout } from './thunks/auth-thunks';
 
 const favoritesSlice = createSlice({
   name: 'favorites',
@@ -8,16 +9,18 @@ const favoritesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadFavoritesFromServer.fulfilled, (state, action) => action.payload)
+      .addCase(loadFavoritesFromServer.fulfilled, (_state, action) => action.payload)
       .addCase(toggleFavorite.fulfilled, (state, action) => {
-        const offer = action.payload;
-        const index = state.findIndex((o) => o.id === offer.id);
-        if (index !== -1 && !offer.isFavorite) {
-          state.splice(index, 1);
-        } else if (index === -1 && offer.isFavorite) {
-          state.push(offer);
+        const updatedOffer = action.payload;
+        if (updatedOffer.isFavorite) {
+          if (!state.some((o) => o.id === updatedOffer.id)) {
+            state.push(updatedOffer);
+          }
+        } else {
+          return state.filter((o) => o.id !== updatedOffer.id);
         }
-      });
+      })
+      .addCase(logout.fulfilled, () => []);
   },
 });
 

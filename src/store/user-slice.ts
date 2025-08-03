@@ -10,16 +10,17 @@ const userSlice = createSlice({
   initialState: {
     user: null as User | null,
     authorizationStatus: AuthorizationStatus.Unknown,
+    isCheckingAuth: true,
   },
   reducers: {
     setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
     },
-    setAuthorizationStatus: (
-      state,
-      action: PayloadAction<AuthorizationStatus>
-    ) => {
+    setAuthorizationStatus: (state, action: PayloadAction<AuthorizationStatus>) => {
       state.authorizationStatus = action.payload;
+    },
+    setIsCheckingAuth: (state, action: PayloadAction<boolean>) => {
+      state.isCheckingAuth = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -27,13 +28,19 @@ const userSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.authorizationStatus = AuthorizationStatus.Auth;
+        state.isCheckingAuth = false;
+      })
+      .addCase(checkAuth.pending, (state) => {
+        state.isCheckingAuth = true;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.user = action.payload;
         state.authorizationStatus = AuthorizationStatus.Auth;
+        state.isCheckingAuth = false;
       })
       .addCase(checkAuth.rejected, (state) => {
         state.authorizationStatus = AuthorizationStatus.NoAuth;
+        state.isCheckingAuth = false;
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
@@ -42,5 +49,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, setAuthorizationStatus } = userSlice.actions;
+export const { setUser, setAuthorizationStatus, setIsCheckingAuth } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { OfferTypes } from '../mocks/offer';
-import { loadOfferById } from './thunks/offer-thunks';
+import { loadOfferById, toggleFavorite } from './thunks/offer-thunks';
 
 const currentOfferSlice = createSlice({
   name: 'currentOffer',
@@ -24,6 +24,16 @@ const currentOfferSlice = createSlice({
       .addCase(loadOfferById.rejected, (state) => {
         state.status = 'failed';
         state.offer = null;
+      })
+      .addCase(toggleFavorite.fulfilled, (state, action) => {
+        const updatedOffer = action.payload;
+        if (state.offer?.id === updatedOffer.id) {
+          state.offer = { ...updatedOffer };
+        }
+        const nearbyIndex = state.nearbyOffers.findIndex((o) => o.id === updatedOffer.id);
+        if (nearbyIndex !== -1) {
+          state.nearbyOffers[nearbyIndex] = updatedOffer;
+        }
       });
   },
 });

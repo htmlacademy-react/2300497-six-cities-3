@@ -4,7 +4,7 @@ import { saveToken } from '../../services/token';
 import { User, LoginResponse } from '../types/types';
 import { AxiosInstance } from 'axios';
 import { AppDispatch } from '..';
-import { setAuthorizationStatus, setUser, setIsCheckingAuth } from '../reducer';
+import { setAuthorizationStatus, setUser, setIsCheckingAuth } from '../user-slice';
 import { clearToken } from '../../services/token';
 import { AuthorizationStatus } from '../../const/const';
 import { loadFavoritesFromServer } from './offer-thunks';
